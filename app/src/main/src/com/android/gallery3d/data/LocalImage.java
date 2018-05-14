@@ -62,6 +62,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import cn.com.bst.librefocus.RefocuseUtils;
+
 // LocalImage represents an image in the local storage.
 public class LocalImage extends LocalMediaItem {
     static final Path ITEM_PATH = Path.fromString("/local/image/item");
@@ -498,6 +500,10 @@ public class LocalImage extends LocalMediaItem {
 //                if (FrameworkSupportUtils.isSupportVoiceImage())
 //                return MEDIA_TYPE_IMAGE_PHOTO_VOICE;
 //            }
+            if (RefocuseUtils.isRefocusImage(filePath)) {
+                return MEDIA_TYPE_IMAGE_REFOCUS;
+            }
+
         }
         return MEDIA_TYPE_IMAGE;
     }

@@ -98,7 +98,6 @@ public class GalleryAppImpl extends MultiDexApplication implements GalleryApp {
 
         String path = "/system/etc/";
 //        String path = Environment.getExternalStorageDirectory().getPath()+"/data";
-        Log.w("face", path);
         FaceSimManager.initFace(this, path, 12, new
                 OnInitFaceCallbackListener() {
                     @Override
@@ -111,6 +110,7 @@ public class GalleryAppImpl extends MultiDexApplication implements GalleryApp {
                     }
                 });
         boolean flag = FaceSimManager.checkPb();
+        Log.w("face", "" + flag);
 
         // for baas analytics
        /* DroiAnalytics.initialize(this);

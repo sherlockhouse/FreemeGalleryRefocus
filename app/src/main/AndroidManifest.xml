@@ -670,15 +670,22 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="refocusImage/*" />
             </intent-filter>
-            <meta-data
-                android:name="com.freeme.app.theme"
-                android:value="freeme:style/Theme.Freeme.Light"/>
         </activity>
 
         <service
             android:name="GalleryClassifierService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
+        <activity
+            android:name="cn.com.bst.librefocus.RefocusActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Theme.Refocus"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="cn.com.bst.librefocus.refocusedit" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

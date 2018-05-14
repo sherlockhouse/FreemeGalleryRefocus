@@ -34,7 +34,6 @@ public class MediaStoreImportService extends IntentService {
     private Handler.Callback mCallback = new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            LogUtil.i("mContentObserver msg = " + msg);
             return false;
         }
     };

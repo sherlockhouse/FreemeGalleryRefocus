@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <SurfaceView
+        android:id="@+id/surface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <cn.com.bst.librefocus.FocusCanvas
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/focus_canvas"/>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/status_bar_height"
+        android:id="@+id/photopage_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:orientation="horizontal"
+        android:paddingEnd="6dp"
+        android:paddingStart="@dimen/photopage_toolbar_paddingstart"
+        android:visibility="visible">
+
+
+        <ImageView
+            android:id="@+id/photopage_back_image"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/action_bar_content_inset_freeme"
+            android:layout_marginStart="@dimen/action_bar_icon_padding_left"
+            android:clickable="true"
+            android:contentDescription="@string/finish"
+            android:paddingStart="@dimen/action_bar_arrow_margin_left"
+            android:src="@drawable/ic_android_black_24dp"
+            android:onClick="backClicked"/>
+
+        <TextView
+            android:id="@+id/photopage_back_text"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/action_bar_content_inset_freeme"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingStart="@dimen/photopage_action_bar_arrow_margin_left"
+            android:text="@string/tab_photos"
+            android:textColor="@color/primary_dark_freeme_light"
+            android:textSize="@dimen/text_size_title_freeme"
+            android:onClick="backClicked"/>
+
+        <LinearLayout
+            android:id="@+id/photopage_detals_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:gravity="right|center_vertical"
+            android:paddingEnd="@dimen/photopage_toolbar_paddingend"
+            android:paddingStart="6dp">
+
+            <ImageView
+                android:id="@+id/saveButton"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/action_bar_content_inset_freeme"
+                android:layout_marginEnd="6dp"
+                android:clickable="true"
+                android:src="@drawable/ic_menu_save_refocus" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:fitsSystemWindows="true"
+        android:id="@+id/sdof_adjust_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/setting_second_pop_bg"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/aperture_indicator"
+            android:layout_width="@dimen/freeme_sdof_indicator_text_width"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:drawableTop="@drawable/ic_sdof_small_aperture"
+            android:gravity="center"
+            android:text="5.0f"
+            android:textColor="#A6FFFFFF" />
+
+        <SeekBar
+            android:id="@+id/sdof_adjust_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:max="300"
+            android:progress="1"
+            android:progressDrawable="@drawable/seekbar_style"
+            android:thumb="@drawable/adjust_dot" />
+    </LinearLayout>
+
+</RelativeLayout>

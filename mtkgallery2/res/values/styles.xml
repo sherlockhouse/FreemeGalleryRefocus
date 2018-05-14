@@ -16,6 +16,12 @@
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
+    <style name="Theme.RefocusDefault" parent="@android:style/Theme.Material.Light">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
     <style name="GalleryTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <!--<item name="@*android:panelMenuListTheme">@*android:style/Theme.Material.Light.CompactMenu</item>-->
         <item name="listPreferredItemHeightSmall">?android:attr/listPreferredItemHeightSmall</item>

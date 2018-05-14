@@ -64,8 +64,7 @@ public class MediaStoreImporter {
 
         Cursor cursor = mResolver.query(MediaStore.Files.getContentUri("external"),
                 GalleryStore.PROJECTION, where, null, null);
-        LogUtil.i("import Data cursor count" , "" + cursor.getCount());
-        //todo store cursor count to compare story count aialbum; cursor count - story count
+
         if (cursor != null && cursor.moveToFirst()) {
             for (int i = 0; i < cursor.getCount(); i++) {
                 long _id = cursor.getLong(0);
@@ -88,8 +87,6 @@ public class MediaStoreImporter {
             LogUtil.i("SQLiteConstraintException : " + e);
         }
         galleryFilesDao.updateInTx(updateFilesList);
-
-
     }
 
     private List<Long> getContainIds() {
