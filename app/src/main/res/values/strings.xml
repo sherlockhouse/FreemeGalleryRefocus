@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="video_app_notfound">Please download a Video app</string>
-    <string name="group">group</string>
-    <string name="food">food</string>
-    <string name="car">car</string>
-    <string name="architecture">architecture</string>
-    <string name="landscape">landscape</string>
-    <string name="baby">baby</string>
-    <string name="dog">dog</string>
-    <string name="cat">cat</string>
+    <string name="group">Group</string>
+    <string name="food">Food</string>
+    <string name="car">Car</string>
+    <string name="architecture">Architecture</string>
+    <string name="landscape">Landscape</string>
+    <string name="baby">Baby</string>
+    <string name="dog">Dog</string>
+    <string name="cat">Cat</string>
 </resources>

@@ -167,11 +167,7 @@
                 <data android:mimeType="vnd.android.cursor.dir/image" />
                 <data android:mimeType="vnd.android.cursor.dir/video" />
             </intent-filter>
-            <intent-filter>
-            <action android:name="android.intent.action.LAUNCH_FROM_CAMERA" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="video/*" />
-            </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -670,6 +666,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="refocusImage/*" />
             </intent-filter>
+            <meta-data
+                android:name="com.freeme.app.theme"
+                android:value="freeme:style/Theme.Freeme.Light"/>
         </activity>
 
         <service

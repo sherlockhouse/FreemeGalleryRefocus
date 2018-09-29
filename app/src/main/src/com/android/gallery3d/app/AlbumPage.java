@@ -100,6 +100,9 @@ import java.util.ArrayList;
 import com.freeme.provider.GalleryStore;
 import com.mediatek.galleryframework.util.DebugUtils;
 
+
+import com.android.gallery3d.app.OrientationManager;
+
 public class AlbumPage extends ActivityState implements GalleryActionBar.ClusterRunner,
         SelectionManager.SelectionListener, MediaSet.SyncListener, GalleryActionBar.OnAlbumModeSelectedListener
         , SecretMenuHandler.MenuListener,State , View.OnClickListener{
@@ -181,7 +184,10 @@ public class AlbumPage extends ActivityState implements GalleryActionBar.Cluster
     // Added by TYD Theobald_Wu on 2014/01 [begin] for jigsaw feature
     private boolean mJigsawPicker;
     // Added by TYD Theobald_Wu on 2014/01 [end]
- 
+
+    private OrientationManager mOrientationManager;
+
+
     private PhotoFallbackEffect.PositionProvider mPositionProvider =
             new PhotoFallbackEffect.PositionProvider() {
         @Override
@@ -516,6 +522,7 @@ public class AlbumPage extends ActivityState implements GalleryActionBar.Cluster
             /// M: [DEBUG.ADD] @{
             Log.d(TAG, "<onGetContent> start CropActivity for extra crop, uri: " + uri);
             /// @}
+            intent.setPackage("com.freeme.gallery");
             activity.startActivity(intent);
             activity.finish();
         } else {
@@ -662,6 +669,7 @@ public class AlbumPage extends ActivityState implements GalleryActionBar.Cluster
     protected void onResume() {
         super.onResume();
         mIsActive = true;
+        mOrientationManager.lockOrientation(true);
         mActivity.getNavigationWidgetManager().changeStateTo(this);
         mResumeEffect = mActivity.getTransitionStore().get(KEY_RESUME_ANIMATION);
         if (mResumeEffect != null) {
@@ -805,6 +813,10 @@ public class AlbumPage extends ActivityState implements GalleryActionBar.Cluster
                 return onItemSelected(item, menuItemid);
             }
         });
+        //*/ Added by droi Linguanrong for lock orientation, 16-3-1
+        mOrientationManager = mActivity.getOrientationManager();
+        mActivity.getGLRoot().setOrientationSource(mOrientationManager);
+        //*/
     }
 
     private void initializeData(Bundle data) {

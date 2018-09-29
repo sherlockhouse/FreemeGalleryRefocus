@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 <resources>
-    <dimen name="preview_margin">2dp</dimen>
+    <dimen name="preview_margin">10dp</dimen>
     <dimen name="shadow_margin">5dp</dimen>
     <!-- <dimen name="crop_min_side">45dp</dimen> -->
     <dimen name="crop_min_side">10dp</dimen>

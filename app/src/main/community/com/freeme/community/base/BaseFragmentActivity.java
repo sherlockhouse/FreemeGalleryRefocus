@@ -19,10 +19,6 @@ public abstract class BaseFragmentActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(BuildConfig.SUPPORT_STABLE_BRIGHTNESS) {
-            FreemeUtils.setScreenBrightness(getWindow());
-        }
-
         initVariables();
         initViews(savedInstanceState);
         loadData();

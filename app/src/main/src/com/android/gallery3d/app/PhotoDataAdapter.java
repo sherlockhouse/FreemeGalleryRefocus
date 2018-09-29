@@ -722,6 +722,7 @@ public class PhotoDataAdapter implements PhotoPage.Model {
                 MediaItem item = getItem(mCurrentIndex);
                 if (item != null) {
                     mTileProvider.mExtItem = item.getExtItem();
+                    mTileProvider.mMimeType = item.getMimeType();
                 }
                 /// @}
             } else {

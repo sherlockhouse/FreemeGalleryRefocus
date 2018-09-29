@@ -129,6 +129,7 @@
 
     <string name="baby_album">親子相册</string>
     <string name="love_album">戀愛相册</string>
+    <string name="plant_album">植物</string>
     <string name="add_story_album">創建相冊</string>
     <string name="add_story_album_hint">給相冊起個名字</string>
     <string name="add_story_album_tip">不能為空且長度不得大於10</string>
@@ -180,10 +181,13 @@
 
     <string name="set_lockscreen_failed">設置鎖屏壁紙失敗，請重試！</string>
 
-    <string name="cannot_delete_tip">主題相冊無法刪除</string>
+    <string name="cannot_delete_tip">默認相冊需要保留</string>
 
     <string name="share_freeme_extra_title">"拍一張比自己更美的照片"</string>
     <string name="share_freeme_extra_summary">"用Freeme OS相機拍照，朋友圈的好友都來點贊啦！秘密就在這裡！"</string>
 
     <string name="gesture_to_last">已是最後一個項目</string>
+    <string name="is_classifying">正在處理未分類圖片:</string>
+    <string name="refocus_save_success">"保存成功"</string>
+
 </resources>

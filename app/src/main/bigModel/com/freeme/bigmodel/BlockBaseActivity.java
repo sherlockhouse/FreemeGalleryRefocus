@@ -20,7 +20,9 @@ public class BlockBaseActivity extends Activity {
     @Override
     public void finish() {
         super.finish();
-        activitys.removeLast();
+        if(activitys != null) {
+            activitys.removeLast();
+        }
     }
 
     public void outOfBigModeWithReslut(Intent intent) {

@@ -1109,4 +1109,6 @@ CHAR LIMIT = NONE] -->
         <item quantity="one">%1$d photo</item>
         <item quantity="other">%1$d photos</item>
     </plurals>
+    <string name="max_input_length">Enter up to 9 characters</string>
+    <string name="max_share_count">Can only share up to 100</string>
 </resources>

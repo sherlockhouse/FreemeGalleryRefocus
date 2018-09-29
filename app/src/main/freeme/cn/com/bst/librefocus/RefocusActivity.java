@@ -1,8 +1,6 @@
 package cn.com.bst.librefocus;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -13,7 +11,6 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -26,8 +23,8 @@ import java.lang.ref.WeakReference;
 public class RefocusActivity extends Activity {
 
     private long mImageHandle = 0;
-    private static final String OTP_PATH = "/sdcard/Pictures/bokeh_otp_default.dat";
-    private static final String CFG_FILE_PATH = "/sdcard/Pictures/bokeh_still_normal.cfg;/system/etc/bokeh_still_night.cfg;/system/etc/bokeh_still_macro.cfg";
+    private static final String OTP_PATH = "/vendor/etc/freemegallery/bokeh_otp_default.dat";
+    private static final String CFG_FILE_PATH = "/vendor/etc/freemegallery/bokeh_still_normal.cfg;/vendor/etc/freemegallery/bokeh_still_night.cfg;/vendor/etc/freemegallery/bokeh_still_macro.cfg";
     private Refocuser.Image mDisplayImage = null;
     private FocusCanvas mFocusCanvas;
     private TextView mFNumberText;
@@ -68,12 +65,12 @@ public class RefocusActivity extends Activity {
     }
 
     private void initViews() {
-        SurfaceView mSurface = findViewById(R.id.surface);
-        ImageView mSaveBt = findViewById(R.id.saveButton);
-        mFocusCanvas = findViewById(R.id.focus_canvas);
-        mFNumberText = findViewById(R.id.aperture_indicator);
-        mBackImage = findViewById( R.id.photopage_back_image);
-        mBackTextview = findViewById(R.id.photopage_back_text);
+        SurfaceView mSurface = (SurfaceView)findViewById(R.id.surface);
+        ImageView mSaveBt = (ImageView)findViewById(R.id.saveButton);
+        mFocusCanvas = (FocusCanvas)findViewById(R.id.focus_canvas);
+        mFNumberText = (TextView)findViewById(R.id.aperture_indicator);
+        mBackImage = (ImageView)findViewById(R.id.photopage_back_image);
+        mBackTextview = (TextView)findViewById(R.id.photopage_back_text);
         mSurface.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder surfaceHolder) {
@@ -104,7 +101,6 @@ public class RefocusActivity extends Activity {
         mSurface.setOnTouchListener(new View.OnTouchListener() {
             private boolean isDown = false;
 
-            @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 int action = motionEvent.getAction();
                 if (action == MotionEvent.ACTION_DOWN) {
@@ -113,12 +109,12 @@ public class RefocusActivity extends Activity {
                         float canvasX = motionEvent.getX();
                         float canvasY = motionEvent.getY();
                         imagePos = Refocuser._displayHelperGetPointRelativeToPicture(canvasX, canvasY);
-                        int res = Refocuser._doRefocus(mImageHandle, imagePos[0], imagePos[1], fNumber);
-                        if (res == 0) {
-                            refreshDisplay();
-                        } else {
-                            //errror
-                        }
+                        mMainHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                doRefocusDisplay();
+                            }
+                        });
                     }
                     isDown = true;
                 } else if (action == MotionEvent.ACTION_UP) {
@@ -136,7 +132,7 @@ public class RefocusActivity extends Activity {
                     if (res != 0) {
                         // ERROR
                     } else {
-                        Toast.makeText(RefocusActivity.this, "Save success", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RefocusActivity.this, R.string.refocus_save_success, Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -173,6 +169,15 @@ public class RefocusActivity extends Activity {
         mAdjustSeekBar.setProgress(mProgress);
     }
 
+    private void doRefocusDisplay() {
+        int res = Refocuser._doRefocus(mImageHandle, imagePos[0], imagePos[1], fNumber);
+        if (res == 0) {
+            refreshDisplay();
+        } else {
+            //errror
+        }
+    }
+
     private Runnable mSetLevelRunnable = new Runnable() {
         @Override
         public void run() {
@@ -187,12 +192,7 @@ public class RefocusActivity extends Activity {
                 imagePos = Refocuser._displayHelperGetPointRelativeToPicture(winPos[0], winPos[1]);
             }
 
-            int res = Refocuser._doRefocus(mImageHandle, imagePos[0], imagePos[1], fNumber);
-            if (res == 0) {
-                refreshDisplay();
-            } else {
-                //errror
-            }
+            doRefocusDisplay();
 
         }
     };
@@ -215,7 +215,7 @@ public class RefocusActivity extends Activity {
         float[] windowPos = Refocuser._displayHelperGetPointRelativeToSurface(
                 uniformedX, uniformedY);
         if (windowPos != null && windowPos.length == 2) {
-            mFocusCanvas.focus((int)windowPos[0], (int)windowPos[1]);
+            mFocusCanvas.focus((int) windowPos[0], (int) windowPos[1]);
             mFocusCanvas.postInvalidate();
         }
         String fString = String.valueOf(mDisplayImage.fNumber);

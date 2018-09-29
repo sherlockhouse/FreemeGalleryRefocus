@@ -440,6 +440,9 @@ public class TranslateActivity extends com.freeme.bigmodel.BlockBaseActivity {
                 @Override
                 public void onClick(View view) {
                     // TODO Auto-generated method stub
+                    if(!(BlockBaseActivity.activitys.getLast() instanceof TranslateActivity)){
+                        BlockBaseActivity.activitys.addLast(TranslateActivity.this);
+                    }
                     chineseitem = (TextView) view.findViewById(R.id.remmandchinese_tv);
                     chineseitem.setText(chinesel.get(arg0));
                     englishitem = (TextView) view.findViewById(R.id.remmandenglish_tv);

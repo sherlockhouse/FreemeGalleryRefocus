@@ -48,6 +48,7 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
@@ -99,7 +100,7 @@ import com.freeme.utils.FreemeCustomUtils;
 import com.freeme.utils.FreemeUtils;
 import java.io.File;
 import java.util.ArrayList;
-
+import com.android.gallery3d.ui.DetailsHelper.OpenListener;
 import com.sprd.gallery3d.refocus.RefocusPhotoEditActivity;
 
 public abstract class PhotoPage extends ActivityState implements
@@ -126,6 +127,7 @@ public abstract class PhotoPage extends ActivityState implements
     public static final  int                      MSG_ALBUMPAGE_PICKED              = 4;
     public static final  String                   ACTION_NEXTGEN_EDIT               = "action_nextgen_edit";
     public static final  String                   ACTION_SIMPLE_EDIT                = "action_simple_edit";
+    public static final int DELAY_MILLIS = 1000;
     private static final String                   TAG                               = "PhotoPage";
     private static final int                      MSG_HIDE_BARS                     = 1;
     private static final int                      MSG_ON_FULL_SCREEN_CHANGED        = 4;
@@ -169,9 +171,8 @@ public abstract class PhotoPage extends ActivityState implements
     private int mCurrentIndex = 0;
     private Handler mHandler;
     private          boolean mShowBars         = true;
-    //*/ Added by Linguanrong for photopage bottom controls, 2014-9-17
-    private          boolean mShared           = false;
-    //*/
+    private boolean mDialogOpen = false;
+
     private volatile boolean mActionBarAllowed = true;
     private GalleryActionBar mActionBar;
     private final GLView mRootPane = new GLView() {
@@ -308,15 +309,8 @@ public abstract class PhotoPage extends ActivityState implements
         }
         //*/
 
-        if (mBottomText != null) {
-//            mBottomText.setvisible(false);
-        }
 
         //*/ Added by Linguanrong for photopage bottom controls, 2014-9-17
-        if (mShared) {
-            mShared = false;
-            return mShowBars && canShowBars() && !mPhotoView.getFilmMode();
-        }
 
         return mShowBars && canShowBars() && mIsActive && !mPhotoView.getFilmMode()
                 && (mOriginalSetPathString != null);
@@ -413,8 +407,7 @@ public abstract class PhotoPage extends ActivityState implements
             case TAB0:
                 freemeControl = R.id.photopage_bottom_control_edit;
                 if (!mBottomControls.getIsEditable()) {
-                    mShared = true;
-                    actionShare();
+                    setOrientaionBeforeShare();
                     return;
                 }
                 break;
@@ -431,12 +424,14 @@ public abstract class PhotoPage extends ActivityState implements
             case TAB3:
                 mSelectionManager.deSelectAll();
                 mSelectionManager.toggle(path);
-                Intent intent = getIntentBySingleSelectedPath(Intent.ACTION_ATTACH_DATA)
-                        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                intent.putExtra("mimeType", intent.getType());
-                Activity activity = mActivity;
-                activity.startActivity(Intent.createChooser(
-                        intent, activity.getString(R.string.set_as)));
+                mOrientationManager.lockOrientation(true);
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        actionSetas();
+                    }
+                }, mOrientationManager.getDisplayRotation() == Surface.ROTATION_0 ? 0 : DELAY_MILLIS);
+
                 return;
             case TAB4:
                 freemeControl = R.id.photopage_bottom_control_blockbuster;
@@ -475,21 +470,14 @@ public abstract class PhotoPage extends ActivityState implements
                 launchPhotoEditor();
                 return;
 
-//            case R.id.ic_menu_photo_edit:
-//                return;
+
             case R.id.photopage_bottom_control_blockbuster:
-                //*/ Added by Linguanrong for guide, 2015-08-10
-//                if(mBottomControls.mSharedPref.getBoolean("showBlockGuide", true)) {
-//                    mBottomControls.setBlockDrawable();
-//                    mBottomControls.mEditor.putBoolean("showBlockGuide", false);
-//                    mBottomControls.mEditor.commit();
-//                }
-                //*/
+
                 jumptolarge();
                 return;
             case R.id.photopage_bottom_control_share:
-                mShared = true;
-                actionShare();
+                setOrientaionBeforeShare();
+
                 //*/ Added by tyd Linguanrong for statistic, 15-12-18
 //                StatisticUtil.generateStatisticInfo(mActivity, StatisticData.OPTION_SHARE);
                 //*/
@@ -538,6 +526,16 @@ public abstract class PhotoPage extends ActivityState implements
         }
     }
 
+    private void setOrientaionBeforeShare() {
+        mOrientationManager.lockOrientation(true);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                actionShare();
+            }
+        }, mOrientationManager.getDisplayRotation() == Surface.ROTATION_0 ? 0 : DELAY_MILLIS);
+    }
+
     @Override
     public void refreshBottomControlsWhenReady() {
         if (mBottomControls == null) {
@@ -577,10 +575,19 @@ public abstract class PhotoPage extends ActivityState implements
     }
     //*/
 
+    private void actionSetas() {
+        Intent intent = getIntentBySingleSelectedPath(Intent.ACTION_ATTACH_DATA)
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.putExtra("mimeType", intent.getType());
+        Activity activity = mActivity;
+        activity.startActivity(Intent.createChooser(
+                intent, activity.getString(R.string.set_as)));
+    }
+
     private void actionShare() {
         Intent shareIntent = createShareIntent(mCurrentPhoto);
-        mActivity.startActivity(FreemeCustomUtils.createCustomChooser(mActivity, shareIntent,
-                mActivity.getResources().getString(R.string.share)));
+        mActivity.startActivityForResult(FreemeCustomUtils.createCustomChooser(mActivity, shareIntent,
+                mActivity.getResources().getString(R.string.share)), GalleryActivity.CHOOSER_REQUEST_CODE);
     }
 
     @TargetApi(ApiHelper.VERSION_CODES.JELLY_BEAN)
@@ -761,6 +768,7 @@ public abstract class PhotoPage extends ActivityState implements
         }
         //end
         if (!mShowBars) return;
+        if(mDialogOpen) return;
         mShowBars = false;
 //        mActionBar.hide();
         mActivity.getGLRoot().setLightsOutMode(true);
@@ -1853,6 +1861,14 @@ public abstract class PhotoPage extends ActivityState implements
                 @Override
                 public void onClose() {
                     hideDetails();
+                    mDialogOpen = false;
+                    hideBars();
+                }
+            });
+            mDetailsHelper.setOpenListener(new OpenListener() {
+                @Override
+                public void onOpen() {
+                    mDialogOpen = true;
                 }
             });
         }
@@ -1898,6 +1914,10 @@ public abstract class PhotoPage extends ActivityState implements
             mActivity.startActivity(intent);
         } else if (launchCamera) {
             launchCamera();
+        } else if (item.getMimeType().startsWith("refocusImage/") && clickCenter) {
+            if (FrameworkSupportUtils.isSupportRefocusImage()) {
+                startRefocusActivity(item.getPlayUri(), item);
+            }
         } else {
             toggleBars();
         }

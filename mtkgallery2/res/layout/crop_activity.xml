@@ -76,25 +76,27 @@
                 android:layout_width="116.0dip"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/khob_bg">
-
-                <ImageButton
-                    android:id="@+id/landscap_mode"
-                    android:layout_width="45.0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/khob_button_bg"
-                    android:src="@drawable/landscap_mode"/>
+                android:background="@drawable/khob_bg"
+                android:visibility="gone">
 
                 <ImageButton
                     android:id="@+id/portrait_mode"
                     android:layout_width="45.0dip"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/khob_transparent_bg"
                     android:src="@drawable/portrait_mode"/>
+
+                <ImageButton
+                    android:id="@+id/landscap_mode"
+                    android:layout_width="45.0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/khob_button_bg"
+                    android:src="@drawable/landscap_mode"/>
+
             </RelativeLayout>
         </RelativeLayout>
 

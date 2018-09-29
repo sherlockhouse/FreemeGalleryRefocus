@@ -23,6 +23,7 @@ package com.freeme.page;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
@@ -62,6 +63,7 @@ import android.widget.Toast;
 import com.android.gallery3d.app.AlbumClassifierPage;
 import com.android.gallery3d.data.Face;
 import com.droi.sdk.analytics.DroiAnalytics;
+import com.freeme.community.utils.ToastUtil;
 import com.freeme.data.FaceAlbumSet;
 import com.freeme.data.StoryAlbum;
 import com.freeme.data.StoryAlbumSet;
@@ -739,7 +741,7 @@ public class AlbumStorySetPage extends ActivityState implements
 
         MediaSet targetSet = mAlbumSetDataAdapter.getMediaSet(slotIndex);
         if (targetSet == null) return; // Content is dirty, we shall reload soon
-        if (slotIndex == mAlbumSetDataAdapter.size() - 1
+        if (slotIndex <= mAlbumSetDataAdapter.size() - 1
                 && !StoryAlbumSet.isNotMaxAlbum
                 && targetSet.getTotalMediaItemCount() == 0) {
             mRenameItemId = -1;
@@ -789,6 +791,9 @@ public class AlbumStorySetPage extends ActivityState implements
         /*/
         /*/
         if (slotIndex == StoryAlbumSet.ALBUM_BABY_ID) {
+            if (targetSet.getMediaItemCount() < 1) {
+                return;
+            }
             data.putBoolean(GalleryActivity.KEY_GET_CONTENT, false);
             data.putString(AlbumStorySetPage.KEY_MEDIA_PATH, FaceAlbumSet.PATH.toString());
 //                data.putInt(AlbumStorySetPage.KEY_SELECTED_CLUSTER_TYPE, clusterType);
@@ -973,8 +978,9 @@ public class AlbumStorySetPage extends ActivityState implements
             switch (i.getAction()) {
                 case GalleryClassifierService.ACTION_COMPLETE:
                     if (!isDestroyed()) {
-                        Toast.makeText(mActivity, "正在处理未分类图片:" + i.getStringExtra("storycount"),
-                                Toast.LENGTH_SHORT).show();
+                        // freeme.gulincheng 2018.0601 don't modify showToast here ,or it will get crushed.
+                        showToast(mActivity,mActivity.getResources().
+                                getString(R.string.is_classifying) + i.getStringExtra("storycount"));
                     }
                     break;
                 case GalleryClassifierService.ACTION_ADDALBUM:
@@ -991,6 +997,17 @@ public class AlbumStorySetPage extends ActivityState implements
             }
         }
     };
+
+    private Toast mToast;
+
+    private void showToast(Activity activity, String storycount) {
+        if (mToast != null) {
+            mToast.cancel();
+        }
+
+        mToast = Toast.makeText(activity, storycount, Toast.LENGTH_SHORT);
+        mToast.show();
+    }
 
     @Override
     public void onResume() {

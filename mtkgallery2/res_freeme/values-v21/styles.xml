@@ -396,8 +396,7 @@
         <item name="android:height">?android:attr/actionBarSize</item>
         <item name="android:actionModeCloseDrawable">@drawable/ic_ab_back_material</item>
         <item name="android:actionMenuTextAppearance">@style/MenuTextStyle</item>
-        <item name="android:background">@color/transparent</item>
-
+        <item name="android:background">@color/foreground_freeme_dark</item>
         <!--<item name="android:titleTextStyle">@style/TextAppearance.Freeme.Widget.ActionMode.Title</item>-->
         <!--<item name="android:subtitleTextStyle">@style/TextAppearance.Freeme.Widget.ActionMode.Subtitle</item>-->
         <!--<item name="*android:closeItemLayout">@layout/action_mode_close_item_freeme</item>-->

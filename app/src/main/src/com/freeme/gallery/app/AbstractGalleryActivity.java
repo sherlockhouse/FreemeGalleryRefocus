@@ -150,6 +150,7 @@ public class AbstractGalleryActivity extends Activity implements GalleryContext,
     public FreemeActionBarUpContainerLayout mFreemeActionBarContainer;
 
     public static final String FREEMEGALLERY_DB = "freemegalleryai.db";
+    private int mCurrentState;
 
 
     @Override
@@ -537,9 +538,13 @@ public class AbstractGalleryActivity extends Activity implements GalleryContext,
     public static final int IN_ADD_STORYPAGE= 5;
 
 
+    public int getmCurrentState() {
+        return mCurrentState;
+    }
 
     @Override
     public void showNavi(int state) {
+        mCurrentState = state;
         switch (state) {
             case IN_PHOTOPAGE:// in photopage
                 setViewPagerVisible(View.INVISIBLE);

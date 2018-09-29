@@ -132,7 +132,7 @@
 
     <string name="baby_album">Baby album</string>
     <string name="face_album">Face</string>
-    <string name="flower_album">Flower</string>
+    <string name="plant_album">Plant</string>
     <string name="love_album">Love album</string>
     <string name="add_story_album">Add new album</string>
     <string name="add_story_album_hint">Make name for album</string>
@@ -212,5 +212,5 @@
     <string name="refocus_save_success">"Save successfully"</string>
     <string name="refocus_save_fail">"Save failed"</string>
     <string name="play_audio_failed">play audio failed</string>
-
+    <string name="is_classifying">processing uncategorized pictures:</string>
 </resources>

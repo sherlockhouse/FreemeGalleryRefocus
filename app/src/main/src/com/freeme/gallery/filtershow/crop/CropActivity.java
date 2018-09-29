@@ -163,7 +163,7 @@ public class CropActivity extends Activity implements SaveWallpaper.SaveWallPape
 
         //*/ tyd.biantao 20140409. wallpaper.
         if (setAsWallpaper) {
-            mSaveWallPaper = new SaveWallpaper(this, this, SaveWallpaper.SaveTypeGener.getHomescreenType(false), mCropExtras);
+            mSaveWallPaper = new SaveWallpaper(this, this, SaveWallpaper.SaveTypeGener.getHomescreenType(true), mCropExtras);
         } else if (setAsLockWallpaper) {
             mSaveWallPaper = new SaveWallpaper(this, this, SaveWallpaper.SaveTypeGener.getLockscreenType(), mCropExtras);
         } else {

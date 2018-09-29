@@ -18,6 +18,7 @@ public class FrameworkSupportUtils {
     private static int      SUPPORT_VOICE         =   1;
     private static boolean  supportVoice  = false;
 
+    private static final String screen_brightness_pro = "ro.freeme.screenbrightness";
     private static final SettingProperties mSettings;
     static {
         mSettings = SettingProperties.getInstance();
@@ -45,4 +46,7 @@ public class FrameworkSupportUtils {
         return supportVoice;
     }
 
+    public static float getScreenBritness() {
+        return mSettings.getFloat(screen_brightness_pro);
+    }
 }

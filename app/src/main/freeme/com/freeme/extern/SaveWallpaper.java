@@ -99,7 +99,7 @@ public class SaveWallpaper {
                         break;
                     }
                     case R.id.tab_wallpaper: {
-                        type = SaveTypeGener.getHomescreenType(false);
+                        type = SaveTypeGener.getHomescreenType(true);
                         break;
                     }
                     case R.id.tab_all: {

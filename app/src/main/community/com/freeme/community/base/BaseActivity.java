@@ -17,8 +17,5 @@ public class BaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(BuildConfig.SUPPORT_STABLE_BRIGHTNESS) {
-            FreemeUtils.setScreenBrightness(getWindow());
-        }
     }
 }

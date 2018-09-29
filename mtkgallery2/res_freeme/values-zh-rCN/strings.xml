@@ -127,7 +127,7 @@
     <string name="baby_album">人物</string>
     <string name="love_album">植物</string>
     <string name="face_album">人物</string>
-    <string name="flower_album">植物</string>
+    <string name="plant_album">植物</string>
     <string name="add_story_album">创建相册</string>
     <string name="add_story_album_hint">给相册起个名字</string>
     <string name="add_story_album_tip">不能为空且长度不得大于10</string>
@@ -180,10 +180,13 @@
 
     <string name="set_lockscreen_failed">设置锁屏壁纸失败，请重试！</string>
 
-    <string name="cannot_delete_tip">主题相册无法删除</string>
+    <string name="cannot_delete_tip">默认相册需要保留</string>
 
     <string name="share_freeme_extra_title">"拍一张比自己更美的照片"</string>
     <string name="share_freeme_extra_summary">"用Freeme OS相机拍照，朋友圈的好友都来点赞啦！秘密就在这里！"</string>
 
     <string name="gesture_to_last">已是最后一个项目</string>
+    <string name="is_classifying">正在处理未分类图片:</string>
+    <string name="refocus_save_success">"保存成功"</string>
+
 </resources>

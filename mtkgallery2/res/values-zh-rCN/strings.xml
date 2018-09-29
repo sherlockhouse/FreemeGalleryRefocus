@@ -437,4 +437,6 @@
         <item quantity="one">"%1$d 项被选中"</item>
         <item quantity="other">"%1$d 项被选中"</item>
     </plurals>
+    <string name="max_input_length">最多输入9个字符</string>
+    <string name="max_share_count">最多只能分享100张</string>
 </resources>

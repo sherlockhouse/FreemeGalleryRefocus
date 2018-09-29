@@ -99,6 +99,9 @@ public class SettingProperties extends Properties {
 
     public float getFloat(String name, float defaultValue) {
         String value = getProperty(name, "");
+        if (value.equals("false")) {
+            return defaultValue;
+        }
         return TextUtils.isEmpty(value) ? defaultValue : Float.parseFloat(value);
     }
 

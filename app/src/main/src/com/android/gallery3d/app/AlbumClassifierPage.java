@@ -583,7 +583,7 @@ public class AlbumClassifierPage extends ActivityState implements GalleryActionB
             mFreemeHomeView = mActivity.mFreemeActionBarContainer.findViewById(com.freeme.gallery.R.id.freeme_home_view);
             mFreemeHomeView.findViewById(com.freeme.gallery.R.id.up).setOnClickListener(this);
             mFreemeActionBarBackTitle = mFreemeHomeView.findViewById(com.freeme.gallery.R.id.freeme_actionbar_back_title);
-            mFreemeActionBarBackTitle.setText(R.string.albums);
+            mFreemeActionBarBackTitle.setText(R.string.tab_by_story);
             mFreemeTitleLayout = mActivity.mFreemeActionBarContainer.findViewById(com.freeme.gallery.R.id.freeme_title_layout);
             ((TextView)(mFreemeTitleLayout.findViewById(com.freeme.gallery.R.id.action_bar_title))).setText(mMediaSet.getName());
             mFreemeActionBarBackTitle.setOnClickListener(this);
