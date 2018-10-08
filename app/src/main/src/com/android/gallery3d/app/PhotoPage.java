@@ -55,16 +55,15 @@ import android.widget.RelativeLayout;
 import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
+import com.android.gallery3d.common.ApiHelper;
 import com.android.gallery3d.common.Utils;
-import com.android.gallery3d.data.LocalImage;
-import com.freeme.extern.PhotopageComments;
-import com.freeme.gallery.R;
 import com.android.gallery3d.data.CameraShortcutImage;
 import com.android.gallery3d.data.ComboAlbum;
 import com.android.gallery3d.data.DataManager;
 import com.android.gallery3d.data.EmptyAlbumImage;
 import com.android.gallery3d.data.FilterDeleteSet;
 import com.android.gallery3d.data.FilterSource;
+import com.android.gallery3d.data.LocalImage;
 import com.android.gallery3d.data.MediaDetails;
 import com.android.gallery3d.data.MediaItem;
 import com.android.gallery3d.data.MediaObject;
@@ -76,15 +75,11 @@ import com.android.gallery3d.data.SecureSource;
 import com.android.gallery3d.data.SnailAlbum;
 import com.android.gallery3d.data.SnailItem;
 import com.android.gallery3d.data.SnailSource;
-import com.freeme.gallery.app.AbstractGalleryActivity;
-import com.freeme.gallery.app.GalleryActivity;
-import com.freeme.gallery.app.TrimVideo;
-import com.freeme.gallery.filtershow.FilterShowActivity;
-import com.freeme.gallery.filtershow.crop.CropActivity;
 import com.android.gallery3d.picasasource.PicasaSource;
 import com.android.gallery3d.ui.DetailsHelper;
 import com.android.gallery3d.ui.DetailsHelper.CloseListener;
 import com.android.gallery3d.ui.DetailsHelper.DetailsSource;
+import com.android.gallery3d.ui.DetailsHelper.OpenListener;
 import com.android.gallery3d.ui.GLRootView;
 import com.android.gallery3d.ui.GLView;
 import com.android.gallery3d.ui.MenuExecutor;
@@ -93,15 +88,21 @@ import com.android.gallery3d.ui.SelectionManager;
 import com.android.gallery3d.ui.SynchronizedHandler;
 import com.android.gallery3d.util.GalleryUtils;
 import com.android.gallery3d.util.UsageStatistics;
-import com.android.gallery3d.common.ApiHelper;
+import com.freeme.extern.PhotopageComments;
+import com.freeme.gallery.R;
+import com.freeme.gallery.app.AbstractGalleryActivity;
+import com.freeme.gallery.app.GalleryActivity;
+import com.freeme.gallery.app.TrimVideo;
+import com.freeme.gallery.filtershow.FilterShowActivity;
+import com.freeme.gallery.filtershow.crop.CropActivity;
 import com.freeme.ui.manager.State;
 import com.freeme.utils.FrameworkSupportUtils;
 import com.freeme.utils.FreemeCustomUtils;
 import com.freeme.utils.FreemeUtils;
+import com.sprd.gallery3d.refocus.RefocusPhotoEditActivity;
+
 import java.io.File;
 import java.util.ArrayList;
-import com.android.gallery3d.ui.DetailsHelper.OpenListener;
-import com.sprd.gallery3d.refocus.RefocusPhotoEditActivity;
 
 public abstract class PhotoPage extends ActivityState implements
         PhotoView.Listener, AppBridge.Server, ShareActionProvider.OnShareTargetSelectedListener,
@@ -325,15 +326,9 @@ public abstract class PhotoPage extends ActivityState implements
         if (isCommentvisible && mBottomText != null && !mPhotoView.getFilmMode()) {
 //            mBottomText.setvisible(false);
         }
+        boolean isSupport = false;
         switch (control) {
-            case R.id.photopage_back_text:
-                if(mIsStartFromTimeshaft) {
-                    mBottomControls.getMenuBack().setText(R.string.tab_photos);
-                } else {
-                    mBottomControls.getMenuBack().setText(mMediaSet.getName());
-                }
-                return true;
-            case R.id.photopage_bottom_navigation_bar:
+            case R.id.rg_photopage_bottom_navigation_bar:
                 if ((mCurrentPhoto.getSupportedOperations() & MediaObject.SUPPORT_EDIT) != 0) {
                     mBottomControls.setIsEditable(true, false);
                 } else {
@@ -341,12 +336,28 @@ public abstract class PhotoPage extends ActivityState implements
                 }
                 return true;
             case R.id.photopage_bottom_control_edit:
-                mBottomControls.getMenuEdit().setEnabled(
-                    (mCurrentPhoto.getSupportedOperations() & MediaObject.SUPPORT_EDIT) != 0);
+                isSupport = (mCurrentPhoto.getSupportedOperations() & MediaObject
+                        .SUPPORT_EDIT) != 0;
+                mBottomControls.getmRbEdit().setVisibility(
+                        (isSupport ? View.VISIBLE : View.GONE));
                 return true;
             case R.id.photopage_bottom_control_blockbuster:
-                mBottomControls.getMenuBlock().setEnabled(
-                    (mCurrentPhoto.getSupportedOperations() & MediaObject.SUPPORT_EDIT) != 0);
+                isSupport = (mCurrentPhoto.getSupportedOperations() & MediaObject
+                        .SUPPORT_EDIT) != 0;
+                mBottomControls.getmRbFilm().setVisibility(
+                        (isSupport ? View.VISIBLE : View.GONE));
+                return true;
+            case R.id.photopage_bottom_control_setas:
+                isSupport = (mCurrentPhoto.getSupportedOperations() & MediaObject
+                        .SUPPORT_EDIT) != 0;
+                mBottomControls.getmRbSetas().setVisibility(
+                        (isSupport ? View.VISIBLE : View.GONE));
+                return true;
+            case R.id.photopage_bottom_control_tag:
+                isSupport = (mCurrentPhoto.getSupportedOperations() & MediaObject
+                        .SUPPORT_EDIT) != 0;
+                mBottomControls.getmRbTag().setVisibility(
+                        (isSupport ? View.VISIBLE : View.GONE));
                 return true;
             case R.id.photo_voice_icon:
 //                if (mCurrentPhoto instanceof LocalImage && FrameworkSupportUtils.isSupportVoiceImage()) {
@@ -384,15 +395,8 @@ public abstract class PhotoPage extends ActivityState implements
         }
     }
 
-    public static final int TAB0= 0;
-    public static final int TAB1 = 1;
-    public static final int TAB2 = 2;
-    public static final int TAB3 = 3;
-    public static final int TAB4 = 4;
-    public static final int TAB5 = 5;
-
     @Override
-    public void onBottomControlClicked(int control) {
+    public void onBottomControlClicked(int id) {
         refreshHidingMessage();
         MediaItem current = mModel.getMediaItem(0);
 
@@ -402,58 +406,8 @@ public abstract class PhotoPage extends ActivityState implements
 
         DataManager manager = mActivity.getDataManager();
         String confirmMsg = null;
-        int freemeControl = 0;
-        switch (control) {
-            case TAB0:
-                freemeControl = R.id.photopage_bottom_control_edit;
-                if (!mBottomControls.getIsEditable()) {
-                    setOrientaionBeforeShare();
-                    return;
-                }
-                break;
-            case TAB1:
-                if (!mBottomControls.getIsEditable()) {
-                    freemeControl = R.id.photopage_bottom_control_delete;
-                } else {
-                    freemeControl = R.id.photopage_bottom_control_share;
-                }
-                break;
-            case TAB2:
-                freemeControl = R.id.photopage_bottom_control_delete;
-                break;
-            case TAB3:
-                mSelectionManager.deSelectAll();
-                mSelectionManager.toggle(path);
-                mOrientationManager.lockOrientation(true);
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        actionSetas();
-                    }
-                }, mOrientationManager.getDisplayRotation() == Surface.ROTATION_0 ? 0 : DELAY_MILLIS);
 
-                return;
-            case TAB4:
-                freemeControl = R.id.photopage_bottom_control_blockbuster;
-                break;
-            case TAB5:
-                if (!isCommentvisible) {
-                    isCommentvisible = true;
-                    if (isCommentvisible && mBottomText != null && !isEnbled) {
-                        hideBars();
-                    }
-
-                    saveOfflineNewStatus("visible", isCommentvisible);
-                } else {
-                    isCommentvisible = false;
-                    saveOfflineNewStatus("visible", isCommentvisible);
-                }
-                return;
-            default:
-                freemeControl = control;
-                break;
-        }
-        switch (freemeControl) {
+        switch (id) {
             case R.id.photopage_back_image:
             case R.id.photopage_back_text:
                 onBackPressed();
@@ -467,6 +421,10 @@ public abstract class PhotoPage extends ActivityState implements
                 return;
 
             case R.id.photopage_bottom_control_edit:
+                if (!mBottomControls.getIsEditable()) {
+                    setOrientaionBeforeShare();
+                    return;
+                }
                 launchPhotoEditor();
                 return;
 
@@ -521,6 +479,34 @@ public abstract class PhotoPage extends ActivityState implements
                     }
                 }
                 return;
+            case R.id.photopage_bottom_control_setas:
+                mSelectionManager.deSelectAll();
+                mSelectionManager.toggle(path);
+                mOrientationManager.lockOrientation(true);
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        actionSetas();
+                    }
+                }, mOrientationManager.getDisplayRotation() == Surface.ROTATION_0 ? 0 : DELAY_MILLIS);
+
+                return;
+            case R.id.photopage_bottom_control_tag:
+                if (!isCommentvisible) {
+                    isCommentvisible = true;
+                    if (isCommentvisible && mBottomText != null && !isEnbled) {
+                        hideBars();
+                    }
+
+                    mBottomControls.getmRbTag().setText(R.string.hide);
+                    saveOfflineNewStatus("visible", isCommentvisible);
+                } else {
+                    isCommentvisible = false;
+                    mBottomControls.getmRbTag().setText(R.string.tags);
+                    saveOfflineNewStatus("visible", isCommentvisible);
+                }
+                return;
+
             default:
                 return;
         }
@@ -1300,7 +1286,6 @@ public abstract class PhotoPage extends ActivityState implements
         mPhotoView.pause();
         mHandler.removeMessages(MSG_HIDE_BARS);
         mHandler.removeMessages(MSG_REFRESH_BOTTOM_CONTROLS);
-        refreshBottomControlsWhenReady();
         /*mActionBar.removeOnMenuVisibilityListener(mMenuVisibilityListener);
         if (mShowSpinner) {
             mActionBar.disableAlbumModeMenu(true);
@@ -1902,7 +1887,7 @@ public abstract class PhotoPage extends ActivityState implements
 
         if (playVideo && clickCenter) {
             if (mSecureAlbum == null) {
-                FreemeUtils.playVideo(mActivity, item.getPlayUri(), item.getName());
+                FreemeUtils.playVideo(mActivity, item.getPlayUri(), item.getMimeType(), item.getName());
             } else {
                 mActivity.getStateManager().finishState(this);
             }

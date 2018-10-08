@@ -144,7 +144,7 @@ public final class PageConfig {
             slotViewSpec.slotGapV = r.getDimensionPixelSize(R.dimen.albumstory_slot_gap_vertical);
             slotViewSpec.slotHeightAdditional = 0;
             slotViewSpec.slotPadding = r.getDimensionPixelSize(R.dimen.album_slot_padding);
-            slotViewSpec.bottomPadding = r.getDimensionPixelSize(R.dimen.tab_bar_default_height);
+            slotViewSpec.bottomPadding = r.getDimensionPixelSize(R.dimen.storyset_bottompadding);
 
             paddingTop = r.getDimensionPixelSize(R.dimen.albumstory_padding_top);
             paddingBottom = r.getDimensionPixelSize(R.dimen.albumstory_padding_bottom);

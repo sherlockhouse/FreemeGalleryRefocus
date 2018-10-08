@@ -19,7 +19,8 @@
  */
 -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools"
+           tools:ignore="MissingTranslation">
     <string name="jigsaw_title">Jigsaw</string>
     <string name="jigsaw_picker_count">%1$s selected, the most is %2$s</string>
     <string name="jigsaw_sel_template">Select template</string>
@@ -213,4 +214,8 @@
     <string name="refocus_save_fail">"Save failed"</string>
     <string name="play_audio_failed">play audio failed</string>
     <string name="is_classifying">processing uncategorized pictures:</string>
+    <string name="classifying_faces">processing uncategorized faces:</string>
+    <string name="aiwin_hint_title">This tech is provide by AIWINN</string>
+
+    <string name="hide">hide</string>
 </resources>

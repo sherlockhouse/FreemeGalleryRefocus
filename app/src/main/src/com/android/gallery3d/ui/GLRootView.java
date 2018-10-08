@@ -25,17 +25,21 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Matrix;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.os.Process;
 import android.os.SystemClock;
 import android.util.AttributeSet;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.View;
+import android.view.WindowManager;
 
-import com.freeme.gallery.R;
 import com.android.gallery3d.anim.CanvasAnimation;
+import com.android.gallery3d.common.ApiHelper;
+import com.android.gallery3d.common.Utils;
 import com.android.gallery3d.glrenderer.BasicTexture;
 import com.android.gallery3d.glrenderer.GLCanvas;
 import com.android.gallery3d.glrenderer.GLES11Canvas;
@@ -44,8 +48,8 @@ import com.android.gallery3d.glrenderer.UploadedTexture;
 import com.android.gallery3d.util.GalleryUtils;
 import com.android.gallery3d.util.MotionEventHelper;
 import com.android.gallery3d.util.Profile;
-import com.android.gallery3d.common.ApiHelper;
-import com.android.gallery3d.common.Utils;
+import com.freeme.gallery.R;
+import com.freeme.utils.FreemeUtils;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -57,9 +61,6 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 //*/ freeme.gulincheng,20170712,use getRealSize for navigationbar hide #0014585
-import android.graphics.Point;
-import android.view.WindowManager;
-import android.view.Display;
 //*/
 
 // The root component of all <code>GLView</code>s. The rendering is done in GL
@@ -314,7 +315,9 @@ public class GLRootView extends GLSurfaceView
             flags = STATUS_BAR_HIDDEN;
             if (ApiHelper.HAS_VIEW_SYSTEM_UI_FLAG_LAYOUT_STABLE) {
                 //flags |= (SYSTEM_UI_FLAG_FULLSCREEN | SYSTEM_UI_FLAG_LAYOUT_STABLE);
-                flags |= SYSTEM_UI_FLAG_FULLSCREEN | SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+                if(!FreemeUtils.hasNotch()) {
+                    flags |= SYSTEM_UI_FLAG_FULLSCREEN | SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+                }
             }
         }
         setSystemUiVisibility(flags);

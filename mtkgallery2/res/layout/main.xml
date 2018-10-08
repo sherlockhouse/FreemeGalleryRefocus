@@ -23,6 +23,7 @@
             android:elevation="1dp"
             android:orientation="horizontal"
             android:textAllCaps="true"
+            android:visibility="invisible"
             android:textColor="@color/freeme_dialer_tab_text_color" />
 
         <com.freeme.scott.galleryui.design.widget.GalleryViewPager
@@ -91,4 +92,21 @@
         <!--android:text="@string/tab_by_community"/>-->
     </RadioGroup>
     <!--Tyd-->
+
+    <LinearLayout
+        android:id="@+id/aiwin_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/freeme_aiwinn_hint_bottom"
+        android:paddingTop="@dimen/freeme_aiwinn_hint_bottom"
+        android:gravity="center"
+        android:visibility="gone"
+        android:background="@color/album_background"
+        android:layout_alignParentBottom="true">
+        <TextView
+            android:textSize="@dimen/text_size_body_2_freeme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/aiwin_hint_title"/>
+    </LinearLayout>
 </RelativeLayout>

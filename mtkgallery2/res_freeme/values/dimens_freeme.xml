@@ -308,6 +308,6 @@
     <dimen name="freeme_diaphragm_radius">60dp</dimen>
     <dimen name="freeme_sdof_indicator_text_width">30dp</dimen>
 
-
+    <dimen name="freeme_aiwinn_hint_bottom">18dp</dimen>
 
 </resources>

@@ -233,8 +233,12 @@ public class AlbumPage extends ActivityState implements GalleryActionBar.Cluster
                 slotViewTop += mActivity.getResources().getDimension(R.dimen.tab_bar_default_height);
             }
             int slotViewBottom = (int) (bottom - top
-                                - mActivity.getResources().getDimension(com.freeme.gallery.R.dimen.navigation_bar_height));
+                                - mActivity.getResources().getDimension(R.dimen.navigation_bar_height));
             int slotViewRight = right - left;
+
+            if(mSelectionManager.inSelectionMode()) {
+                slotViewBottom -= mActivity.getResources().getDimension(R.dimen.album_bottompadding);
+            }
 
             //*/ Added by TYD Theobald_Wu on 2014/01 [begin] for jigsaw feature
             if (mJigsawPicker && mActivity instanceof JigsawEntry) {
@@ -1012,11 +1016,13 @@ public class AlbumPage extends ActivityState implements GalleryActionBar.Cluster
             case SelectionManager.ENTER_SELECTION_MODE: {
                 mActionModeHandler.startActionMode();
                 performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                mRootPane.requestLayout();
                 break;
             }
             case SelectionManager.LEAVE_SELECTION_MODE: {
                 mActionModeHandler.finishActionMode();
                 mRootPane.invalidate();
+                mRootPane.requestLayout();
                 //*/ Added by Tyd Linguanrong for secret photos, 2014-2-17
                 if (mVisitorMode || mStorySelectMode) {
                     onUpPressed();

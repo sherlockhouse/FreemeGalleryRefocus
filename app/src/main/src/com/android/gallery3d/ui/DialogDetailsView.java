@@ -26,6 +26,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
+import android.content.DialogInterface.OnShowListener;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +44,7 @@ import com.android.gallery3d.ui.DetailsHelper.CloseListener;
 import com.android.gallery3d.ui.DetailsHelper.DetailsSource;
 import com.android.gallery3d.ui.DetailsHelper.DetailsViewContainer;
 import com.android.gallery3d.ui.DetailsHelper.ResolutionResolvingListener;
-
+import com.android.gallery3d.ui.DetailsHelper.OpenListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -60,6 +61,7 @@ public class DialogDetailsView implements DetailsViewContainer {
     private int mIndex;
     private Dialog mDialog;
     private CloseListener mListener;
+    private OpenListener mOpenListener;
 
     public DialogDetailsView(AbstractGalleryActivity activity, DetailsSource source) {
         mActivity = activity;
@@ -131,6 +133,15 @@ public class DialogDetailsView implements DetailsViewContainer {
                 }
             })
             .create();
+
+        mDialog.setOnShowListener(new OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                if (mOpenListener != null) {
+                    mOpenListener.onOpen();
+                }
+            }
+        });
 
         mDialog.setOnDismissListener(new OnDismissListener() {
             @Override
@@ -375,5 +386,10 @@ public class DialogDetailsView implements DetailsViewContainer {
     @Override
     public void setCloseListener(CloseListener listener) {
         mListener = listener;
+    }
+
+    @Override
+    public void setOpenListener(OpenListener listener) {
+        mOpenListener = listener;
     }
 }

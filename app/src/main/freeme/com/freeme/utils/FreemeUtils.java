@@ -36,6 +36,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.android.gallery3d.ui.Log;
 import com.freeme.gallery.BuildConfig;
 import com.freeme.gallery.R;
 import com.freeme.gallery.app.AbstractGalleryActivity;
@@ -93,10 +94,12 @@ public final class FreemeUtils {
         return dm.heightPixels;
     }
 
-    public static void playVideo(Activity activity, Uri uri, String title) {
+    public static void playVideo(Activity activity, Uri uri, String mimeType, String title) {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW)
-                    .setDataAndType(convertUri(uri), "video/*")
+                    //*/freeme.gulincheng  2018.08.07 specify the exact mimetype to speed up system processing time
+                    .setDataAndTypeAndNormalize(convertUri(uri), mimeType)
+                    //*/
                     .putExtra(Intent.EXTRA_TITLE, title)
                     .putExtra(MovieActivity.KEY_TREAT_UP_AS_BACK, true);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -192,6 +195,27 @@ public final class FreemeUtils {
         if (screenBrightness > 0) {
             Settings.System.putInt(resolver, Settings.System.SCREEN_BRIGHTNESS, settingsScreenlight);
         }
+    }
+
+    public static boolean hasNotch(){
+        try {
+            final ReflectUtils reflectUtils = ReflectUtils.reflect("com.freeme.util.FreemeNotchUtil").method("hasNotch");
+            return reflectUtils.get();
+        } catch ( Exception e) {
+            Log.i(TAG, e.toString());
+        }
+        return false;
+    }
+
+    public static int getNotchHeight() {
+        try {
+            final ReflectUtils reflectUtils = ReflectUtils.reflect("com.freeme.util.FreemeNotchUtil").method
+                    ("getNotchHeight");
+            return reflectUtils.get();
+        } catch (Exception e) {
+            Log.i(TAG, e.toString());
+        }
+        return 0;
     }
 }
 

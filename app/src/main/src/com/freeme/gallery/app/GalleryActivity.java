@@ -38,6 +38,8 @@ import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v4.view.ViewPager;
@@ -48,6 +50,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.aiwinn.wrapper.FaceSimManager;
@@ -60,11 +63,7 @@ import com.android.gallery3d.app.PhotoPage;
 import com.android.gallery3d.app.SinglePhotoPage;
 import com.android.gallery3d.app.SlideshowPage;
 import com.android.gallery3d.app.StateManager;
-import com.freeme.data.StoryAlbumSet;
-import com.freeme.data.VisitorAlbum;
-import com.freeme.data.VisitorAlbumVideo;
-import com.freeme.gallery.BuildConfig;
-import com.freeme.gallery.R;
+import com.android.gallery3d.common.Utils;
 import com.android.gallery3d.data.DataManager;
 import com.android.gallery3d.data.MediaItem;
 import com.android.gallery3d.data.MediaSet;
@@ -72,24 +71,28 @@ import com.android.gallery3d.data.Path;
 import com.android.gallery3d.gadget.WidgetUtils;
 import com.android.gallery3d.picasasource.PicasaSource;
 import com.android.gallery3d.util.GalleryUtils;
-
+import com.freeme.data.StoryAlbumSet;
+import com.freeme.data.VisitorAlbum;
+import com.freeme.data.VisitorAlbumVideo;
+import com.freeme.gallery.BuildConfig;
+import com.freeme.gallery.R;
+import com.freeme.page.AlbumCameraPage;
+import com.freeme.page.AlbumStorySetPage;
+import com.freeme.page.AlbumTimeShaftPage;
+import com.freeme.page.AlbumVisitorPage;
 import com.freeme.provider.GalleryDBManager;
 import com.freeme.provider.MediaStoreImporter;
 import com.freeme.scott.galleryui.design.adapter.GalleryPageAdapter;
 import com.freeme.scott.galleryui.design.widget.FreemeBottomSelectedController;
 import com.freeme.scott.galleryui.design.widget.GalleryViewPager;
+import com.freeme.utils.FreemeUtils;
+import com.freeme.utils.LogcatHelper;
 import com.mediatek.gallery3d.adapter.FeatureHelper;
 import com.mediatek.gallery3d.util.PermissionHelper;
 import com.mediatek.gallery3d.util.TraceHelper;
-import com.android.gallery3d.common.Utils;
-import com.freeme.page.AlbumCameraPage;
-import com.freeme.page.AlbumStorySetPage;
-import com.freeme.page.AlbumTimeShaftPage;
-import com.freeme.page.AlbumVisitorPage;
-import com.freeme.utils.FreemeUtils;
-import com.freeme.utils.LogcatHelper;
 import com.mediatek.galleryframework.base.MediaFilter;
 import com.mediatek.galleryframework.base.MediaFilterSetting;
+
 import java.util.ArrayList;
 
 public final class GalleryActivity extends AbstractGalleryActivity
@@ -107,6 +110,7 @@ public final class GalleryActivity extends AbstractGalleryActivity
     public static final String KEY_TYPE_BITS = "type-bits";
     public static final String KEY_MEDIA_TYPES = "mediaTypes";
     public static final String KEY_DISMISS_KEYGUARD = "dismiss-keyguard";
+    public static final String IS_IKO_START = "isIkoStart";
 
     private static final String TAG = "GalleryActivity";
     //*/ Added by tyd Linguanrong for freeme gallery, 16-1-13
@@ -159,15 +163,9 @@ public final class GalleryActivity extends AbstractGalleryActivity
                     WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         }
 
-
         setContentView(R.layout.main);
         setViewPager();
-
-        //*/freemeos.xueweili 16-6-20  add for set cover visable when app first in
-
-
-        //*/
-
+        initHintLayout();
         mContext = this;
 
         if (BuildConfig.DEBUG) {
@@ -189,14 +187,16 @@ public final class GalleryActivity extends AbstractGalleryActivity
         if (mGranted) {
 
             MediaStoreImporter.getInstance().setmResolver(this.getContentResolver());
-            new Handler().post(new Runnable() {
+            HandlerThread handlerThread = new HandlerThread("background-handler");
+            handlerThread.start();
+            Looper looper = handlerThread.getLooper();
+            new Handler(looper).post(new Runnable() {
                 @Override
                 public void run() {
                     MediaStoreImporter.getInstance().deleteFiles();
                 }
             });
-
-
+            mViewPagerTabs.setVisibility(View.VISIBLE);
             /// M: [BUG.ADD] set gl_root_cover visible if open from widget or launch by @{
             // launcher, or else it will flash
             Intent intent = getIntent();
@@ -270,6 +270,11 @@ public final class GalleryActivity extends AbstractGalleryActivity
         mFreemeBottomSelectedView = findViewById(R.id.bottom_container_freeme);
         mBottomSelectedController = new FreemeBottomSelectedController(mFreemeBottomSelectedView);
         controller = new FreemeBottomSelectedController(mFreemeBottomSelectedView);
+
+    }
+
+    private void  initHintLayout(){
+        mHintLayout = (LinearLayout) findViewById(R.id.aiwin_hint);
 
     }
 
@@ -901,6 +906,12 @@ public final class GalleryActivity extends AbstractGalleryActivity
                 }
 
                 if (Manifest.permission.WRITE_EXTERNAL_STORAGE.equals(permissions[i])
+                        && grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                    PermissionHelper.showDeniedPrompt(this);
+                    break;
+                }
+
+                if (Manifest.permission.READ_PHONE_STATE.equals(permissions[i])
                         && grantResults[i] == PackageManager.PERMISSION_DENIED) {
                     PermissionHelper.showDeniedPrompt(this);
                     break;

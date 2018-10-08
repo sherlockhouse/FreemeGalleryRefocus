@@ -188,6 +188,10 @@
 
     <string name="gesture_to_last">已是最後一個項目</string>
     <string name="is_classifying">正在處理未分類圖片:</string>
+    <string name="classifying_faces">正在處理未分類人臉:</string>
     <string name="refocus_save_success">"保存成功"</string>
 
+    <string name="aiwin_hint_title">相關技術由 愛華盈通 提供</string>
+
+    <string name="hide">隱藏</string>
 </resources>

@@ -33,7 +33,7 @@ import com.android.gallery3d.glrenderer.Texture;
 
 public abstract class AbstractSlotRenderer implements SlotView.SlotRenderer {
 
-    private final NinePatchTexture mVideoOverlay;
+    private final ResourceTexture mVideoOverlay;
     private final ResourceTexture  mVideoPlayIcon;
     private final ResourceTexture  mPanoramaIcon;
     private final NinePatchTexture mFramePressed;
@@ -48,7 +48,7 @@ public abstract class AbstractSlotRenderer implements SlotView.SlotRenderer {
 
 
     protected AbstractSlotRenderer(Context context) {
-        mVideoOverlay = new NinePatchTexture(context, R.drawable.ic_video_thumb_freeme);
+        mVideoOverlay = new ResourceTexture(context, R.drawable.ic_video_thumb_freeme);
         mVideoPlayIcon = new ResourceTexture(context, R.drawable.ic_gallery_play);
         mPanoramaIcon = new ResourceTexture(context, R.drawable.ic_360pano_holo_light);
         mFramePressed = new NinePatchTexture(context, R.drawable.grid_pressed);
@@ -161,13 +161,9 @@ public abstract class AbstractSlotRenderer implements SlotView.SlotRenderer {
     }
 
     protected void drawVideoOverlay(GLCanvas canvas, int width, int height) {
-        // Scale the video overlay to the height of the thumbnail and put it
-        // on the left side.
-        ResourceTexture v = mVideoOverlay;
-        float scale = (float) height / v.getHeight();
-        int w = Math.round(scale * v.getWidth());
-        int h = Math.round(scale * v.getHeight());
-        v.draw(canvas, 0, 0, w, h);
+        int iconSize = Math.min(width, height) / 3;
+        mVideoOverlay.draw(canvas, (width - iconSize) / 2, (height - iconSize) / 2,
+                iconSize, iconSize);
 
         /// M: [FEATURE.MODIFY] do not show play icon@{
         // int s = Math.min(width, height) / 6;

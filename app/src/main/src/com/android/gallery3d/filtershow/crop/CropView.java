@@ -127,12 +127,13 @@ public class CropView extends View {
             RectF containing = mCropObj.getOuterBounds();
             if (crop != newCropBounds || containing != newPhotoBounds
                     || mRotation != rotation) {
-                mRotation = rotation;
+                //Rotation doesn't work in new system
+                //mRotation = rotation;
                 mCropObj.resetBoundsTo(newCropBounds, newPhotoBounds);
                 clearDisplay();
             }
         } else {
-            mRotation = rotation;
+            //mRotation = rotation;
             mCropObj = new CropObject(newPhotoBounds, newCropBounds, 0);
             clearDisplay();
         }

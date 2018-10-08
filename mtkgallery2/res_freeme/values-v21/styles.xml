@@ -319,7 +319,7 @@
         <!--<item name="android:actionBarSize">@dimen/action_bar_default_height_freeme</item>-->
         <!--<item name="*android:actionModePopupWindowStyle">@style/Widget.Freeme.Light.PopupWindow.ActionMode</item>-->
         <!--<item name="android:actionMenuTextAppearance">@style/TextAppearance.Freeme.Widget.ActionBar.Menu</item>-->
-        <item name="android:actionMenuTextColor">@color/text_color_menu_freeme</item>
+        <item name="android:actionMenuTextColor">@color/primary_text_freeme_light</item>
         <item name="android:actionBarWidgetTheme">@null</item>
         <item name="android:actionBarPopupTheme">@null</item>
         <item name="android:actionBarTheme">@null</item><!-- actionbar overflow color-->
@@ -587,7 +587,21 @@
     <style name="DialtactsActionBarTabTextStyle"
         parent="android:style/Widget.Material.Light.ActionBar.TabText">
         <item name="android:textColor">@color/tab_text_color</item>
-        <item name="android:textSize">@dimen/tab_text_size</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">"sans-serif-medium"</item>
+    </style>
+
+    <style name="RadioButtonStyle" parent="android:Widget.Material.CompoundButton.RadioButton">
+        <item name="android:drawableTint">@color/freeme_bottom_radiobutton_dark</item>
+        <item name="android:textColor">@color/freeme_bottom_radiobutton_dark</item>
+        <item name="android:translationZ">0dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:button">@null</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:textSize">10sp</item>
     </style>
 </resources>

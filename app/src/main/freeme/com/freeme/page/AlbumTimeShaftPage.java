@@ -20,6 +20,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -33,9 +35,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.droi.sdk.analytics.DroiAnalytics;
-import com.freeme.data.StoryAlbumSet;
-import com.freeme.gallery.R;
 import com.android.gallery3d.anim.StateTransitionAnimation;
 import com.android.gallery3d.app.ActivityState;
 import com.android.gallery3d.app.AlbumDataLoader;
@@ -43,14 +42,13 @@ import com.android.gallery3d.app.AlbumSetPage;
 import com.android.gallery3d.app.FilmstripPage;
 import com.android.gallery3d.app.FilterUtils;
 import com.android.gallery3d.app.GalleryActionBar;
-import com.freeme.gallery.app.AbstractGalleryActivity;
-import com.freeme.gallery.app.GalleryActivity;
 import com.android.gallery3d.app.LoadingListener;
 import com.android.gallery3d.app.OrientationManager;
 import com.android.gallery3d.app.PhotoPage;
 import com.android.gallery3d.app.SinglePhotoPage;
 import com.android.gallery3d.app.SlideshowPage;
 import com.android.gallery3d.app.TransitionStore;
+import com.android.gallery3d.common.Utils;
 import com.android.gallery3d.data.DataManager;
 import com.android.gallery3d.data.MediaDetails;
 import com.android.gallery3d.data.MediaItem;
@@ -66,18 +64,23 @@ import com.android.gallery3d.ui.GLView;
 import com.android.gallery3d.ui.RelativePosition;
 import com.android.gallery3d.ui.SelectionManager;
 import com.android.gallery3d.ui.SynchronizedHandler;
-import com.android.gallery3d.util.GalleryUtils;
-import com.android.gallery3d.common.Utils;
 import com.android.gallery3d.util.Future;
+import com.android.gallery3d.util.GalleryUtils;
+import com.freeme.camera.mode.ai.IKOActivity;
+import com.freeme.camera.mode.ai.IKOResultBean;
+import com.freeme.camera.mode.ai.IKOSearchUtil;
+import com.freeme.community.utils.ToastUtil;
+import com.freeme.data.StoryAlbumSet;
+import com.freeme.gallery.R;
+import com.freeme.gallery.app.AbstractGalleryActivity;
+import com.freeme.gallery.app.GalleryActivity;
 import com.freeme.jigsaw.app.JigsawEntry;
 import com.freeme.settings.GallerySettings;
-import com.freeme.statistic.StatisticData;
-import com.freeme.statistic.StatisticUtil;
 import com.freeme.ui.AlbumTimeSlotRenderer;
 import com.freeme.ui.DateSlotView;
-import com.freeme.ui.manager.NaviController;
 import com.freeme.ui.manager.State;
 import com.freeme.utils.FreemeUtils;
+import com.mediatek.galleryframework.util.BitmapUtils;
 
 import java.lang.ref.WeakReference;
 
@@ -100,6 +103,9 @@ public class AlbumTimeShaftPage extends ActivityState implements GalleryActionBa
     private static final int BIT_LOADING_SYNC       = 2;
 
     private static final float USER_DISTANCE_METER = 0.3f;
+
+    private static final int MAX_LENGHT = 160;
+    private static final int QUAILTY = 50;
 
     /*
     private static final boolean mIsDrmSupported = 
@@ -141,6 +147,9 @@ public class AlbumTimeShaftPage extends ActivityState implements GalleryActionBa
     private int mSlotViewPadding = 0;
     private int mBottomPadding   = 0;
     private int mTopPadding      = 0;
+
+    private boolean isIkoStart = false;
+
     private final GLView mRootPane = new GLView() {
         private final float mMatrix[] = new float[16];
 
@@ -159,6 +168,10 @@ public class AlbumTimeShaftPage extends ActivityState implements GalleryActionBa
             int slotViewTop = mActionBar.getHeight() + mActivity.mStatusBarHeight + mTopPadding;
             int slotViewBottom = bottom - top;
             int slotViewRight = right - left;
+            if(mSelectionManager.inSelectionMode()) {
+                slotViewBottom -= mActivity.getResources().getDimension(R.dimen.album_bottompadding);
+            }
+
 
             if (mShowDetails) {
                 mDetailsHelper.layout(left, slotViewTop, right, bottom);
@@ -325,6 +338,7 @@ public class AlbumTimeShaftPage extends ActivityState implements GalleryActionBa
     @Override
     protected void onResume() {
         super.onResume();
+        isIkoStart = mActivity.getIntent().getBooleanExtra(GalleryActivity.IS_IKO_START, false);
         mActivity.getNavigationWidgetManager().changeStateTo(this);
         mIsActive = true;
         mActionBar.setDisplayOptions(false, GalleryActionBar.SHOWTITLE);
@@ -657,10 +671,24 @@ public class AlbumTimeShaftPage extends ActivityState implements GalleryActionBa
                     PhotoPage.MSG_ALBUMPAGE_PICKED);
             transitions.put(PhotoPage.KEY_INDEX_HINT, slotIndex);
             onBackPressed();
+        } else if (isIkoStart) {
+            if (IKOSearchUtil.getNetWorkStatus(mActivity)) {
+                final IKOResultBean ikoResultBean = new IKOResultBean();
+                Bitmap bitmap = BitmapUtils.resizeDownBySideLength(
+                        BitmapFactory.decodeFile(item.getFilePath()),
+                        GalleryUtils.dpToPixel(MAX_LENGHT), true);
+                ikoResultBean.setmResultByte(BitmapUtils.compressToBytes((bitmap), QUAILTY));
+                IKOSearchUtil.getInstance().setIKOResultBean(ikoResultBean);
+                Intent intent = new Intent();
+                intent.setClass(mActivity, IKOActivity.class);
+                mActivity.startActivity(intent);
+            } else {
+                ToastUtil.showToast(mActivity, R.string.check_network);
+            }
         } else {
             //*/ Added by Linguanrong for play video directly, 2015-6-19
             if (!startInFilmstrip && canBePlayed(item)) {
-                FreemeUtils.playVideo(mActivity, item.getPlayUri(), item.getName());
+                FreemeUtils.playVideo(mActivity, item.getPlayUri(), item.getMimeType(), item.getName());
                 return;
             }
             //*/
@@ -822,6 +850,7 @@ public class AlbumTimeShaftPage extends ActivityState implements GalleryActionBa
                     performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 }
                 mResumeSelection = false;
+                mRootPane.requestLayout();
                 break;
             }
             case SelectionManager.LEAVE_SELECTION_MODE: {
@@ -829,6 +858,7 @@ public class AlbumTimeShaftPage extends ActivityState implements GalleryActionBa
                 mSlotView.updateSelection(false);
                 mActionModeHandler.finishActionMode();
                 mRootPane.invalidate();
+                mRootPane.requestLayout();
                 break;
             }
 

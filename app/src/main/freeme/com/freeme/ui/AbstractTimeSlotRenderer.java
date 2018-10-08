@@ -28,7 +28,7 @@ import com.android.gallery3d.glrenderer.Texture;
 
 public abstract class AbstractTimeSlotRenderer implements DateSlotView.SlotRenderer {
 
-    private final NinePatchTexture mVideoOverlay;
+    private final ResourceTexture mVideoOverlay;
     private final ResourceTexture  mPanoramaIcon;
     private final NinePatchTexture mFramePressed;
     private final NinePatchTexture mFrameSelected;
@@ -42,7 +42,7 @@ public abstract class AbstractTimeSlotRenderer implements DateSlotView.SlotRende
 
 
     protected AbstractTimeSlotRenderer(Context context) {
-        mVideoOverlay = new NinePatchTexture(context, R.drawable.ic_video_thumb_freeme);
+        mVideoOverlay = new ResourceTexture(context, R.drawable.ic_video_thumb_freeme);
         mPanoramaIcon = new ResourceTexture(context, R.drawable.ic_360pano_holo_light);
         mFramePressed = new NinePatchTexture(context, R.drawable.grid_pressed);
         mFrameSelected = new NinePatchTexture(context, R.drawable.freeme_grid_selected);
@@ -78,14 +78,10 @@ public abstract class AbstractTimeSlotRenderer implements DateSlotView.SlotRende
     }
 
     protected void drawVideoOverlay(GLCanvas canvas, int width, int height) {
-        // Scale the video overlay to the height of the thumbnail and put it
-        // on the left side.
-        ResourceTexture v = mVideoOverlay;
-        float scaleW = (float) width / v.getWidth();
-        float scaleH = (float) height / v.getHeight();
-        int w = Math.round(scaleW * v.getWidth());
-        int h = Math.round(scaleH * v.getHeight());
-        v.draw(canvas, 0, 0, w, h);
+        int iconSize = Math.min(width, height) / 3;
+        mVideoOverlay.draw(canvas, (width - iconSize) / 2, (height - iconSize) / 2,
+                iconSize, iconSize);
+
     }
 
     protected void drawPanoramaIcon(GLCanvas canvas, int width, int height) {

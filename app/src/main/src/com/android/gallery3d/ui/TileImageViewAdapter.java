@@ -1,8 +1,8 @@
 /*
-* Copyright (C) 2014 MediaTek Inc.
-* Modification based on code covered by the mentioned copyright
-* and/or permission notice(s).
-*/
+ * Copyright (C) 2014 MediaTek Inc.
+ * Modification based on code covered by the mentioned copyright
+ * and/or permission notice(s).
+ */
 /*
  * Copyright (C) 2010 The Android Open Source Project
  *
@@ -33,6 +33,8 @@ import com.android.gallery3d.common.ApiHelper;
 import com.android.gallery3d.common.Utils;
 import com.android.gallery3d.data.MediaItem;
 import com.android.photos.data.GalleryBitmapPool;
+import com.mediatek.gallery3d.adapter.FeatureManager;
+import com.mediatek.gallerybasic.base.IDecodeOptionsProcessor;
 import com.mediatek.galleryfeature.config.FeatureConfig;
 import com.mediatek.galleryframework.base.ExtItem;
 import com.mediatek.galleryframework.util.BitmapUtils;
@@ -49,6 +51,8 @@ public class TileImageViewAdapter implements TileImageView.TileSource {
     protected int mImageWidth;
     protected int mImageHeight;
     protected int mLevelCount;
+    private static IDecodeOptionsProcessor[] sOptionsProcessors;
+    public String mMimeType = null;
 
     public TileImageViewAdapter() {
     }
@@ -83,6 +87,7 @@ public class TileImageViewAdapter implements TileImageView.TileSource {
      * M: [PERF.ADD]
      * Set region decoder to tile provider,
      * The width and height is come from cache.
+     *
      * @param decoder
      * @param width
      * @param height
@@ -146,7 +151,9 @@ public class TileImageViewAdapter implements TileImageView.TileSource {
         options.inPreferQualityOverSpeed = true;
         options.inSampleSize = (1 << level);
         options.inBitmap = bitmap;
-
+        if (mMimeType != null) {
+            processOptions(mMimeType, options);
+        }
         try {
             // In CropImage, we may call the decodeRegion() concurrently.
             synchronized (regionDecoder) {
@@ -190,7 +197,9 @@ public class TileImageViewAdapter implements TileImageView.TileSource {
         options.inPreferQualityOverSpeed = true;
         options.inSampleSize = (1 << level);
         Bitmap bitmap = null;
-
+        if (mMimeType != null) {
+            processOptions(mMimeType, options);
+        }
         // In CropImage, we may call the decodeRegion() concurrently.
         synchronized (regionDecoder) {
             bitmap = regionDecoder.decodeRegion(overlapRegion, options);
@@ -234,6 +243,7 @@ public class TileImageViewAdapter implements TileImageView.TileSource {
     public int getLevelCount() {
         return mLevelCount;
     }
+
     //********************************************************************
     //*                              MTK                                 *
     //********************************************************************
@@ -242,6 +252,7 @@ public class TileImageViewAdapter implements TileImageView.TileSource {
     private ReadWriteLock mRegionDecoderLock = new ReentrantReadWriteLock();
 
     public ExtItem mExtItem = null;
+
     public TileImageViewAdapter(
             Bitmap bitmap, BitmapRegionDecoder regionDecoder) {
         Utils.checkNotNull(bitmap);
@@ -294,7 +305,7 @@ public class TileImageViewAdapter implements TileImageView.TileSource {
 
     /// Only replace the rect which contains valid pixel data, not replace the whole bitmap
     private Bitmap
-            replaceBackgroudForTile(Bitmap bitmap, int level, int x, int y, int tileSize) {
+    replaceBackgroudForTile(Bitmap bitmap, int level, int x, int y, int tileSize) {
         int t = tileSize << level;
         Rect wantRegion = new Rect(x, y, x + t, y + t);
         int resWidth = wantRegion.right > mImageWidth ? (mImageWidth - x) >> level : tileSize;
@@ -302,5 +313,20 @@ public class TileImageViewAdapter implements TileImageView.TileSource {
                 wantRegion.bottom > mImageHeight ? (mImageHeight - y) >> level : tileSize;
         return BitmapUtils.replaceBackgroundColor(bitmap, true, new Rect(0, 0, resWidth,
                 resHeight));
+    }
+
+    //clear photopage
+    private boolean processOptions(String mimeType, BitmapFactory.Options options) {
+        if (sOptionsProcessors == null) {
+            sOptionsProcessors =
+                    (IDecodeOptionsProcessor[]) FeatureManager.getInstance().getImplement(
+                            IDecodeOptionsProcessor.class);
+        }
+        boolean changed = false;
+        for (IDecodeOptionsProcessor processor : sOptionsProcessors) {
+            changed = changed || processor.processRegionDecodeOptions(mimeType, options);
+        }
+
+        return changed;
     }
 }

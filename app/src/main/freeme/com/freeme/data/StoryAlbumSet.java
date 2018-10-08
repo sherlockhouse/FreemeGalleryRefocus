@@ -29,7 +29,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.util.SparseArray;
 
-import com.freeme.gallery.R;
 import com.android.gallery3d.app.GalleryApp;
 import com.android.gallery3d.data.ChangeNotifier;
 import com.android.gallery3d.data.DataManager;
@@ -40,13 +39,13 @@ import com.android.gallery3d.data.Path;
 import com.android.gallery3d.util.Future;
 import com.android.gallery3d.util.FutureListener;
 import com.android.gallery3d.util.ThreadPool;
+import com.freeme.gallery.R;
 import com.freeme.provider.GalleryStore;
 import com.freeme.provider.GalleryStore.Images;
 import com.freeme.utils.FreemeUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 
 public class StoryAlbumSet extends MediaSet implements FutureListener<ArrayList<MediaSet>> {
     public static final int MAX_ALBUM_NUM = 15;
@@ -346,6 +345,8 @@ public class StoryAlbumSet extends MediaSet implements FutureListener<ArrayList<
         if (key != ALBUM_BABY_ID && key != ALBUM_LOVE_ID && key != mAlbumAddId) {
             mAlbumNameMap.remove(key);
             mAlbumMap.remove(key);
+            mEditor.remove(StoryAlbumSet.ALBUM_KEY + key);
+            mEditor.apply();
         }
 
         if (key == ALBUM_BABY_ID) {
@@ -474,9 +475,11 @@ public class StoryAlbumSet extends MediaSet implements FutureListener<ArrayList<
                             ((StoryAlbum) album).setName(mAlbumNameMap.get(mMaxStoryBucketId));
                         }
                     }
+                    if (album.getTotalMediaItemCount() == 0) {
+                        removeAlbum(i);
+                    }
                     albums.add(album);
                 } else {
-//                    mEditor.remove(StoryAlbumSet.ALBUM_KEY + i);
                     removeAlbum(i);
                 }
             }

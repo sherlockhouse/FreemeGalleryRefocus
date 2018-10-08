@@ -32,8 +32,8 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -44,7 +44,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,23 +54,23 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-import com.freeme.gallery.R;
+
+import com.android.gallery3d.common.ApiHelper;
 import com.android.gallery3d.common.Utils;
 import com.android.gallery3d.exif.ExifInterface;
+import com.android.gallery3d.filtershow.cache.ImageLoader;
 import com.android.gallery3d.filtershow.crop.CropExtras;
 import com.android.gallery3d.filtershow.crop.CropMath;
-
 import com.android.gallery3d.filtershow.crop.CropView;
+import com.android.gallery3d.filtershow.tools.SaveImage;
 import com.freeme.bigmodel.filter.DecodeSpecLimitor;
 import com.freeme.extern.SaveWallpaper;
-
-import com.android.gallery3d.filtershow.cache.ImageLoader;
-import com.android.gallery3d.exif.ExifInterface;
-import com.android.gallery3d.filtershow.tools.SaveImage;
+import com.freeme.gallery.R;
+import com.freeme.utils.FreemeUtils;
 import com.mediatek.gallery3d.util.Log;
 import com.mediatek.gallery3d.util.PermissionHelper;
 import com.mediatek.galleryframework.util.BitmapUtils;
-import java.io.ByteArrayInputStream;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -81,6 +80,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.TimeZone;
 
+import static android.view.View.SYSTEM_UI_FLAG_FULLSCREEN;
+import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
 
 
 /**
@@ -145,8 +146,13 @@ public class CropActivity extends Activity implements SaveWallpaper.SaveWallPape
         if (setAsWallpaper || setAsLockWallpaper) {
             requestWindowFeature(Window.FEATURE_ACTION_BAR);
             requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            final WindowManager.LayoutParams params = getWindow().getAttributes();
+            if (ApiHelper.HAS_VIEW_SYSTEM_UI_FLAG_LAYOUT_STABLE) {
+                if(!FreemeUtils.hasNotch()) {
+                    params.flags |= SYSTEM_UI_FLAG_FULLSCREEN | SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+                }
+            }
+            getWindow().setAttributes(params);
         }
         //*/
         setContentView(R.layout.crop_activity);
@@ -198,6 +204,9 @@ public class CropActivity extends Activity implements SaveWallpaper.SaveWallPape
         if (granted) {
             if (intent.getData() != null) {
                 mSourceUri = intent.getData();
+                grantUriPermission("com.freeme.gallery", mSourceUri,
+                        Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION // for app lock , it has to regain this permission
+                        | Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 startLoadBitmap(mSourceUri);
             } else {
                 pickImage();

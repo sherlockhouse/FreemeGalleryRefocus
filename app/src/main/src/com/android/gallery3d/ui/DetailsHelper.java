@@ -40,9 +40,14 @@ public class DetailsHelper {
         public void onClose();
     }
 
+    public interface OpenListener {
+        public void onOpen();
+    }
+
     public interface DetailsViewContainer {
         public void reloadDetails();
         public void setCloseListener(CloseListener listener);
+        public void setOpenListener(OpenListener listener);
         public void show();
         public void hide();
     }
@@ -70,6 +75,10 @@ public class DetailsHelper {
 
     public void setCloseListener(CloseListener listener) {
         mContainer.setCloseListener(listener);
+    }
+
+    public void setOpenListener(OpenListener listener) {
+        mContainer.setOpenListener(listener);
     }
 
     public static String resolveAddress(AbstractGalleryActivity activity, double[] latlng,

@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/freeme_photopage_controls"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_alignParentBottom="true"
-    android:layout_alignParentStart="true"
-    android:background="@drawable/top_gradient"
-
-    android:clickable="false"
-    android:fitsSystemWindows="true"
-    android:visibility="gone">
+                android:id="@+id/freeme_photopage_controls"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/top_gradient"
+                android:clickable="false"
+                android:fitsSystemWindows="true"
+                android:visibility="gone">
 
     <LinearLayout
         android:id="@+id/photopage_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:clickable="false"
-        android:paddingEnd="6dp"
+        android:orientation="horizontal"
         android:paddingStart="@dimen/photopage_toolbar_paddingstart"
+        android:paddingEnd="6dp"
         android:visibility="gone">
 
 
@@ -27,30 +26,19 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/action_bar_content_inset_freeme"
             android:layout_marginStart="@dimen/action_bar_icon_padding_left"
+            android:clickable="true"
             android:contentDescription="@string/finish"
-            android:clickable="true"
             android:paddingStart="@dimen/action_bar_arrow_margin_left"
-            android:src="@drawable/ic_android_black_24dp" />
-
-        <TextView
-            android:id="@+id/photopage_back_text"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/action_bar_content_inset_freeme"
-            android:gravity="center"
-            android:clickable="true"
-            android:paddingStart="@dimen/photopage_action_bar_arrow_margin_left"
-            android:text="@string/tab_photos"
-            android:textColor="@color/primary_dark_freeme_light"
-            android:textSize="@dimen/text_size_title_freeme" />
+            android:src="@drawable/ic_android_black_24dp"/>
 
         <LinearLayout
             android:id="@+id/photopage_detals_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right|center_vertical"
             android:clickable="false"
-            android:paddingEnd="@dimen/photopage_toolbar_paddingend"
-            android:paddingStart="6dp">
+            android:gravity="right|center_vertical"
+            android:paddingStart="6dp"
+            android:paddingEnd="@dimen/photopage_toolbar_paddingend">
 
             <ImageView
                 android:id="@+id/photopage_details"
@@ -58,7 +46,7 @@
                 android:layout_height="@dimen/action_bar_content_inset_freeme"
                 android:layout_marginEnd="6dp"
                 android:clickable="true"
-                android:src="@drawable/ic_info_freeme" />
+                android:src="@drawable/ic_info_freeme"/>
         </LinearLayout>
 
 
@@ -95,15 +83,51 @@
         android:visibility="gone"/>
 
 
-
-    <com.freeme.scott.galleryui.design.BottomNavigationBar xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/photopage_bottom_navigation_bar"
+    <RadioGroup
+        android:id="@+id/rg_photopage_bottom_navigation_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        android:fitsSystemWindows="true"
-        android:visibility="visible">
+        android:background="@drawable/photo_action_bar_background"
+        android:orientation="horizontal">
 
-    </com.freeme.scott.galleryui.design.BottomNavigationBar>
+        <RadioButton
+            android:id="@+id/photopage_bottom_control_edit"
+            style="@style/RadioButtonStyle"
+            android:drawableTop="@drawable/ic_menu_photo_edit"
+            android:text="@string/edit"/>
+
+        <RadioButton
+            android:id="@+id/photopage_bottom_control_share"
+            style="@style/RadioButtonStyle"
+            android:drawableTop="@drawable/ic_menu_photo_share"
+            android:text="@string/share"/>
+
+        <RadioButton
+            android:id="@+id/photopage_bottom_control_delete"
+            style="@style/RadioButtonStyle"
+            android:drawableTop="@drawable/ic_menu_photo_delete"
+            android:text="@string/delete"/>
+
+        <RadioButton
+            android:id="@+id/photopage_bottom_control_setas"
+            style="@style/RadioButtonStyle"
+            android:drawableTop="@drawable/ic_menu_photo_setas"
+            android:text="@string/set_as"/>
+
+        <RadioButton
+            android:id="@+id/photopage_bottom_control_blockbuster"
+            style="@style/RadioButtonStyle"
+            android:drawableTop="@drawable/ic_menu_photo_film"
+            android:text="@string/blockbuster"/>
+
+        <RadioButton
+            android:id="@+id/photopage_bottom_control_tag"
+            style="@style/RadioButtonStyle"
+            android:drawableTop="@drawable/ic_menu_photo_tag"
+            android:text="@string/tags"/>
+
+    </RadioGroup>
+
 </RelativeLayout>

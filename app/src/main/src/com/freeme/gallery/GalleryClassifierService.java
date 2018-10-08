@@ -27,9 +27,7 @@ import com.mediatek.galleryframework.util.BitmapUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import static com.freeme.data.FaceAlbumSet.ALBUM_FACE_FEATURE;
 import static com.freeme.data.FaceAlbumSet.ALBUM_FACE_ID;
@@ -95,6 +93,9 @@ public class GalleryClassifierService extends JobIntentService {
 
     public static final String ACTION_COMPLETE =
             "com.freeme.gallery.galleryclassifierservice.action.COMPLETE";
+
+    public static final String ACTION_FACE_COMPLETE =
+            "com.freeme.gallery.galleryclassifierservice.action.FACECOMPLETE";
 
     public static final String ACTION_ADDALBUM =
             "com.freeme.gallery.galleryclassifierservice.action.ADDALBUM";
@@ -341,7 +342,7 @@ public class GalleryClassifierService extends JobIntentService {
                 mFacePaths.clear();
                 mNewFaceAlbumsFeatures.clear();
 
-                Intent bd = new Intent(ACTION_COMPLETE);
+                Intent bd = new Intent(ACTION_FACE_COMPLETE);
                 bd.putExtra("storycount",  faceCount + " / " + cursor.getCount());
                 LocalBroadcastManager.getInstance(this)
                         .sendBroadcast(bd);

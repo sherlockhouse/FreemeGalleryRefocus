@@ -4,10 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -30,6 +28,7 @@ public class PermissionHelper {
         ArrayList<String> permissionsNeeded = new ArrayList<String>();
         permissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         permissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        permissionsNeeded.add(Manifest.permission.READ_PHONE_STATE);
         // check status of permissions, get which permissions need to request
         ArrayList<String> permissionsNeedRequest = new ArrayList<String>();
         for (String permission : permissionsNeeded) {

@@ -27,7 +27,6 @@ import android.os.Vibrator;
 import android.view.Display;
 import android.view.HapticFeedbackConstants;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -35,26 +34,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.droi.sdk.analytics.DroiAnalytics;
-import com.freeme.data.StoryAlbum;
-import com.freeme.data.StoryAlbumSet;
-import com.freeme.data.StoryMergeAlbum;
-import com.freeme.gallery.BuildConfig;
-import com.freeme.gallery.R;
 import com.android.gallery3d.app.ActivityState;
 import com.android.gallery3d.app.AlbumDataLoader;
 import com.android.gallery3d.app.AlbumSetPage;
 import com.android.gallery3d.app.FilmstripPage;
 import com.android.gallery3d.app.FilterUtils;
 import com.android.gallery3d.app.GalleryActionBar;
-import com.freeme.gallery.app.AbstractGalleryActivity;
-import com.freeme.gallery.app.GalleryActivity;
 import com.android.gallery3d.app.LoadingListener;
 import com.android.gallery3d.app.OrientationManager;
 import com.android.gallery3d.app.PhotoPage;
 import com.android.gallery3d.app.SinglePhotoPage;
 import com.android.gallery3d.app.SlideshowPage;
 import com.android.gallery3d.app.TransitionStore;
+import com.android.gallery3d.common.Utils;
 import com.android.gallery3d.data.DataManager;
 import com.android.gallery3d.data.MediaDetails;
 import com.android.gallery3d.data.MediaItem;
@@ -71,19 +63,20 @@ import com.android.gallery3d.ui.MenuExecutor;
 import com.android.gallery3d.ui.RelativePosition;
 import com.android.gallery3d.ui.SelectionManager;
 import com.android.gallery3d.ui.SynchronizedHandler;
-import com.android.gallery3d.util.GalleryUtils;
-import com.android.gallery3d.common.Utils;
 import com.android.gallery3d.util.Future;
+import com.android.gallery3d.util.GalleryUtils;
+import com.freeme.data.StoryAlbum;
+import com.freeme.data.StoryAlbumSet;
+import com.freeme.data.StoryMergeAlbum;
+import com.freeme.gallery.R;
+import com.freeme.gallery.app.AbstractGalleryActivity;
+import com.freeme.gallery.app.GalleryActivity;
 import com.freeme.scott.galleryui.design.widget.FreemeBottomSelectedView;
-import com.freeme.statistic.StatisticData;
-import com.freeme.statistic.StatisticUtil;
 import com.freeme.ui.AlbumTimeSlotRenderer;
 import com.freeme.ui.DateSlotView;
 import com.freeme.ui.manager.State;
 import com.freeme.utils.FreemeUtils;
 import com.freeme.utils.LogUtil;
-import com.freeme.utils.ShareFreemeUtil;
-import com.mediatek.galleryframework.util.DebugUtils;
 
 
 public class AlbumStoryPage extends ActivityState implements GalleryActionBar.ClusterRunner,
@@ -740,7 +733,7 @@ public class AlbumStoryPage extends ActivityState implements GalleryActionBar.Cl
         } else {
             //*/ Added by Linguanrong for play video directly, 2015-6-19
             if (!startInFilmstrip && canBePlayed(item)) {
-                FreemeUtils.playVideo(mActivity, item.getPlayUri(), item.getName());
+                FreemeUtils.playVideo(mActivity, item.getPlayUri(), item.getMimeType(), item.getName());
                 return;
             }
             //*/

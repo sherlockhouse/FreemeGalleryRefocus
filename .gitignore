@@ -13,3 +13,4 @@ gradlew.bat
 */app.iml
 */build/
 *.iml
+local.properties

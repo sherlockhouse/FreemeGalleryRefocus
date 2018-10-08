@@ -16,21 +16,21 @@
         android:id="@+id/focus_canvas"/>
 
     <LinearLayout
-        android:layout_marginTop="@dimen/status_bar_height"
         android:id="@+id/photopage_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="false"
         android:orientation="horizontal"
         android:paddingEnd="6dp"
         android:paddingStart="@dimen/photopage_toolbar_paddingstart"
+        android:background="@drawable/setting_second_pop_bg"
         android:visibility="visible">
 
 
         <ImageView
+            android:layout_marginTop="@dimen/status_bar_height"
             android:id="@+id/photopage_back_image"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/action_bar_content_inset_freeme"
+            android:layout_height="@dimen/action_bar_default_height_freeme"
             android:layout_marginStart="@dimen/action_bar_icon_padding_left"
             android:clickable="true"
             android:contentDescription="@string/finish"
@@ -40,8 +40,9 @@
 
         <TextView
             android:id="@+id/photopage_back_text"
+            android:layout_marginTop="@dimen/status_bar_height"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/action_bar_content_inset_freeme"
+            android:layout_height="@dimen/action_bar_default_height_freeme"
             android:clickable="true"
             android:gravity="center"
             android:paddingStart="@dimen/photopage_action_bar_arrow_margin_left"
@@ -52,18 +53,17 @@
 
         <LinearLayout
             android:id="@+id/photopage_detals_container"
+            android:layout_marginTop="@dimen/status_bar_height"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clickable="false"
             android:gravity="right|center_vertical"
-            android:paddingEnd="@dimen/photopage_toolbar_paddingend"
             android:paddingStart="6dp">
 
             <ImageView
                 android:id="@+id/saveButton"
+                android:padding="12dp"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/action_bar_content_inset_freeme"
-                android:layout_marginEnd="6dp"
+                android:layout_height="@dimen/action_bar_default_height_freeme"
                 android:clickable="true"
                 android:src="@drawable/ic_menu_save_refocus" />
         </LinearLayout>

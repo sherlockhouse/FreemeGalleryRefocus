@@ -9,9 +9,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,8 +22,18 @@ import java.lang.ref.WeakReference;
 public class RefocusActivity extends Activity {
 
     private long mImageHandle = 0;
-    private static final String OTP_PATH = "/vendor/etc/freemegallery/bokeh_otp_default.dat";
-    private static final String CFG_FILE_PATH = "/vendor/etc/freemegallery/bokeh_still_normal.cfg;/vendor/etc/freemegallery/bokeh_still_night.cfg;/vendor/etc/freemegallery/bokeh_still_macro.cfg";
+//    private static final String OTP_PATH = "/vendor/etc/freemegallery/bokeh_otp_default.dat";
+//    private static final String CFG_FILE_PATH = "/vendor/etc/freemegallery/bokeh_still_normal.cfg;/vendor/etc/freemegallery/bokeh_still_night.cfg;/vendor/etc/freemegallery/bokeh_still_macro.cfg";
+
+
+    /* these files are not compiled in gallery, they're introduced by System
+     * ./vendor/mediatek/proprietary/hardware/mtkcam/feature/bokeh/algo/cfg
+     * ./droi/d09/d09/d09_a/override/vendor/mediatek/proprietary/hardware/mtkcam/feature/bokeh/algo/cfg
+     */
+    private static final String OTP_PATH = "/system/etc/bokeh_otp_default.dat";
+    private static final String CFG_FILE_PATH = "/system/etc/bokeh_still_normal.cfg;/system/etc/bokeh_still_night.cfg;/system/etc/bokeh_still_macro.cfg";
+
+
     private Refocuser.Image mDisplayImage = null;
     private FocusCanvas mFocusCanvas;
     private TextView mFNumberText;
@@ -48,8 +57,9 @@ public class RefocusActivity extends Activity {
     private float[] imagePos;
     private float fNumber;
     private int mProgress;
-    private ImageView mBackImage;
-    private TextView mBackTextview;
+    private LinearLayout mSeekbarContainer;
+    private LinearLayout mPhotopageToolbar;
+    private LinearLayout mPhotopageDetailContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +79,18 @@ public class RefocusActivity extends Activity {
         ImageView mSaveBt = (ImageView)findViewById(R.id.saveButton);
         mFocusCanvas = (FocusCanvas)findViewById(R.id.focus_canvas);
         mFNumberText = (TextView)findViewById(R.id.aperture_indicator);
-        mBackImage = (ImageView)findViewById(R.id.photopage_back_image);
-        mBackTextview = (TextView)findViewById(R.id.photopage_back_text);
+        mSeekbarContainer = (LinearLayout) findViewById(R.id.sdof_adjust_container);
+
+        mSeekbarContainer.setOnTouchListener(new View.OnTouchListener(){
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+
+
+
         mSurface.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder surfaceHolder) {
@@ -210,6 +230,7 @@ public class RefocusActivity extends Activity {
         mDisplayImage = Refocuser._getDisplayImage(mImageHandle);
         Refocuser._displayHelperDisplayRefocusImage(mImageHandle);
         // refresh ui
+        if (mDisplayImage != null) {
         int uniformedX = mDisplayImage.focusX * 1000 / mDisplayImage.width;
         int uniformedY = mDisplayImage.focusY * 1000 / mDisplayImage.height;
         float[] windowPos = Refocuser._displayHelperGetPointRelativeToSurface(
@@ -220,7 +241,7 @@ public class RefocusActivity extends Activity {
         }
         String fString = String.valueOf(mDisplayImage.fNumber);
         mFNumberText.setText("F" + fString);
-
+        }
 
     }
 

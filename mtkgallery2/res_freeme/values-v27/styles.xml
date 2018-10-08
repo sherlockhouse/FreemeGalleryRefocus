@@ -1,14 +1,7 @@
 <resources>
 
-    <style name="GalleryTheme" parent="@*freeme:style/Theme.Freeme.Light">
-        <!-- Dialog attributes -->
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowActionModeOverlay">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
-    <style name="Theme.Refocus" parent="@*freeme:style/Theme.Freeme.Light">
+
+    <style name="Theme.Refocus" parent="@android:style/Theme.Material.Light">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowTranslucentNavigation">true</item>
@@ -223,7 +216,7 @@
         <!--<item name="android:actionBarSize">@dimen/action_bar_default_height_freeme</item>-->
         <!--<item name="*android:actionModePopupWindowStyle">@style/Widget.Freeme.Light.PopupWindow.ActionMode</item>-->
         <!--<item name="android:actionMenuTextAppearance">@style/TextAppearance.Freeme.Widget.ActionBar.Menu</item>-->
-        <item name="android:actionMenuTextColor">@color/text_color_menu_freeme</item>
+        <item name="android:actionMenuTextColor">@color/primary_text_freeme_light</item>
         <item name="android:actionBarWidgetTheme">@null</item>
         <item name="android:actionBarPopupTheme">@null</item>
         <item name="android:actionBarTheme">@null</item><!-- actionbar overflow color-->

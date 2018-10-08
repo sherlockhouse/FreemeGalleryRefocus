@@ -500,7 +500,7 @@ public class LocalImage extends LocalMediaItem {
 //                if (FrameworkSupportUtils.isSupportVoiceImage())
 //                return MEDIA_TYPE_IMAGE_PHOTO_VOICE;
 //            }
-            if (RefocuseUtils.isRefocusImage(filePath)) {
+            if (FrameworkSupportUtils.isSupportBstRefocusImage() && RefocuseUtils.isRefocusImage(filePath)) {
                 return MEDIA_TYPE_IMAGE_REFOCUS;
             }
 

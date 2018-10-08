@@ -45,8 +45,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
-import com.aiwinn.wrapper.FaceSimManager;
 import com.android.gallery3d.app.GalleryActionBar;
 import com.android.gallery3d.app.GalleryApp;
 import com.android.gallery3d.app.GalleryContext;
@@ -54,9 +54,7 @@ import com.android.gallery3d.app.Log;
 import com.android.gallery3d.app.OrientationManager;
 import com.android.gallery3d.app.StateManager;
 import com.android.gallery3d.app.TransitionStore;
-import com.android.gallery3d.util.MediaSetUtils;
-import com.freeme.gallery.BuildConfig;
-import com.freeme.gallery.R;
+import com.android.gallery3d.common.ApiHelper;
 import com.android.gallery3d.data.DataManager;
 import com.android.gallery3d.data.MediaItem;
 import com.android.gallery3d.filtershow.cache.ImageLoader;
@@ -64,10 +62,10 @@ import com.android.gallery3d.ui.GLRoot;
 import com.android.gallery3d.ui.GLRootView;
 import com.android.gallery3d.util.GalleryUtils;
 import com.android.gallery3d.util.PanoramaViewHelper;
-import com.android.gallery3d.common.ApiHelper;
 import com.android.gallery3d.util.ThreadPool;
-import com.freeme.gesturesensor.GestureSensorManger;
 import com.android.photos.data.GalleryBitmapPool;
+import com.freeme.gallery.BuildConfig;
+import com.freeme.gallery.R;
 import com.freeme.provider.GalleryDBManager;
 import com.freeme.scott.galleryui.design.widget.FreemeActionBarUpContainerLayout;
 import com.freeme.scott.galleryui.design.widget.FreemeBottomSelectedView;
@@ -148,6 +146,8 @@ public class AbstractGalleryActivity extends Activity implements GalleryContext,
     public ViewPagerTabs mViewPagerTabs;
     public FreemeBottomSelectedView mFreemeBottomSelectedView;
     public FreemeActionBarUpContainerLayout mFreemeActionBarContainer;
+    public LinearLayout mHintLayout;
+
 
     public static final String FREEMEGALLERY_DB = "freemegalleryai.db";
     private int mCurrentState;
@@ -550,33 +550,39 @@ public class AbstractGalleryActivity extends Activity implements GalleryContext,
                 setViewPagerVisible(View.INVISIBLE);
                 setFreemeActionbarContainerVisible(View.INVISIBLE);
                 setmFreemeBottomSelectedViewVisible(View.INVISIBLE);
+                setAiwinnHintVisible(View.GONE);
                 break;
             case IN_ALBUMSETPAGE:// in albumsetpage
                 setViewPagerVisible(View.VISIBLE);
                 setFreemeActionbarContainerVisible(View.INVISIBLE);
                 setmFreemeBottomSelectedViewVisible(View.INVISIBLE);
+                setAiwinnHintVisible(View.GONE);
                 break;
             case IN_ALBUMPAGE:
                 setViewPagerVisible(View.INVISIBLE);
                 setFreemeActionbarContainerVisible(View.VISIBLE);
                 setmFreemeBottomSelectedViewVisible(View.INVISIBLE);
+                setAiwinnHintVisible(View.GONE);
                 break;
 
             case IN_SELECTMODE:
                 setViewPagerVisible(View.INVISIBLE);
                 setFreemeActionbarContainerVisible(View.INVISIBLE);
                 setmFreemeBottomSelectedViewVisible(View.VISIBLE);
+                setAiwinnHintVisible(View.GONE);
                 break;
             case IN_STORYPAGE:
                 setViewPagerVisible(View.INVISIBLE);
                 setFreemeActionbarContainerVisible(View.VISIBLE);
                 setmFreemeBottomSelectedViewVisible(View.INVISIBLE);
                 mFreemeActionBarContainer.setBackgroundColor(Color.TRANSPARENT);
+                setAiwinnHintVisible(View.GONE);
                 break;
             case IN_ADD_STORYPAGE:
                 setViewPagerVisible(View.INVISIBLE);
                 setFreemeActionbarContainerVisible(View.VISIBLE);
                 setmFreemeBottomSelectedViewVisible(View.INVISIBLE);
+                setAiwinnHintVisible(View.GONE);
                 break;
             default:
                 break;
@@ -603,7 +609,11 @@ public class AbstractGalleryActivity extends Activity implements GalleryContext,
         }
     }
 
-
+    public void setAiwinnHintVisible(int visibility) {
+        if (mHintLayout != null) {
+            mHintLayout.setVisibility(visibility);
+        }
+    }
     public interface onGestureSensorListener {
         void onGestureSensorChanged(SensorEvent event);
     }
@@ -621,7 +631,7 @@ public class AbstractGalleryActivity extends Activity implements GalleryContext,
 
     private void registerGestureSensorListener() {
         try {
-            mSlideByGestureEnable = GestureSensorManger.isGestureSensorEnable(this, GestureSensorManger.FREEME_GESTURE_GALLERY_SLIDE);
+//            mSlideByGestureEnable = GestureSensorManger.isGestureSensorEnable(this, GestureSensorManger.FREEME_GESTURE_GALLERY_SLIDE);
         } catch (Exception e) {
             e.printStackTrace();
         }

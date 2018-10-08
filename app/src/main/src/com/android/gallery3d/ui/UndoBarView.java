@@ -107,26 +107,26 @@ public class UndoBarView extends GLView {
 
         int w = getWidth();
         int h = getHeight();
-        mPanel.draw(canvas, mBarMargin, -mBarHeight, w - mBarMargin * 2, mBarHeight);
+        mPanel.draw(canvas, mBarMargin, 0, w - mBarMargin * 2, mBarHeight);
 
         int x = w - mBarMargin;
         int y;
 
         x -= mUndoTextMargin + mUndoText.getWidth();
-        y = (mBarHeight - mUndoText.getHeight()) / 2 - mBarHeight;
+        y = (mBarHeight - mUndoText.getHeight()) / 2;
         mUndoText.draw(canvas, x, y);
 
         x -= mIconMargin + mIconSize;
-        y = (mBarHeight - mIconSize) / 2  - mBarHeight;
+        y = (mBarHeight - mIconSize) / 2;
         mUndoIcon.draw(canvas, x, y, mIconSize, mIconSize);
 
         x -= mSeparatorRightMargin + mSeparatorWidth;
-        y = mSeparatorTopMargin - mBarHeight;
+        y = mSeparatorTopMargin;
         canvas.fillRect(x, y, mSeparatorWidth,
                 mBarHeight - mSeparatorTopMargin - mSeparatorBottomMargin, GRAY);
 
         x = mBarMargin + mDeletedTextMargin;
-        y = (mBarHeight - mDeletedText.getHeight()) / 2 - mBarHeight;
+        y = (mBarHeight - mDeletedText.getHeight()) / 2;
         mDeletedText.draw(canvas, x, y);
 
         canvas.restore();

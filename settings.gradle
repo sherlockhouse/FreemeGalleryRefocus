@@ -1,3 +1,3 @@
-include ':app', ':freemeECInternational', ':freemeEC', ':swipemenu',
+include ':app', ':freemeECInternational', ':freemeEC', ':swipemenu', ':baiduailib',
         ':freemeabout', ':baas_analytics', ':mtkgallery2', ':mtkreflectlib-release',
         ':freeme-support-design', ':freemegallerywidget-debug', ':bundlelibrary-release'
